@@ -3,5 +3,6 @@
 
 
 int main_menu();
+int quit_menu();
 
 #endif

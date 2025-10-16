@@ -1,0 +1,9 @@
+ASCII IMPORT
+- 2d array
+- file_handler.c
+- file_handler.h
+- malloc for universal? or input row/col
+
+vagy nem mivel lehet mashova nem is kell ascii art
+ha keves kell akkor lehet hardcode-olni 
+- hátrány: nem lehet \-t hasznalni

@@ -23,5 +23,6 @@ void menu_wrapper(draw_menu func, int x);
 
 //menus
 void main_menu_draw(int x);
+void quit_menu_draw(int x);
 
 #endif

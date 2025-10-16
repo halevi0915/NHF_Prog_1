@@ -33,14 +33,18 @@ void init_screen() {
 // az adott sorra egy vonalat rajzol
 void line(int row) {
     char t[WIDTH+1];                                        // +1 for \0
-    int middle_len = (WIDTH - 2 > 0) ? (WIDTH - 2) : 0;     // -2 for the 2 '|'
+    int middle_len = (WIDTH - 6 > 0) ? (WIDTH - 6) : 0;     // -6 for the 2 '|'
 
     // FILL
-    t[0] = '|';
+    t[0] = ' ';
+    t[1] = ' ';
+    t[2] = '|';
     for (int i = 0; i < middle_len; i++)
-        t[1 + i] = '-';
-    t[1 + middle_len] = '|';
-    t[2 + middle_len] = '\0';
+        t[3 + i] = '-';
+    t[3 + middle_len] = '|';
+    t[4 + middle_len] = ' ';
+    t[5 + middle_len] = ' ';
+    t[6 + middle_len] = '\0';
 
     // OUT
     mvprintw(row, 0, "%s", t);
@@ -62,12 +66,12 @@ void side(int row, char msg_1[], char msg_2[]) {
 // megrajzolja az alap kinézetet
 // vonalak minden oldalon
 void draw_base() {
-    line(1);
-    line(HEIGHT - 2);
     for (int i = 0; i < HEIGHT; ++i) {
         mvprintw(i, 2, "%s", "|");
         mvprintw(i, WIDTH - 3, "%s", "|");
     }
+    line(1);
+    line(HEIGHT - 2);
 }
 
 // WRAPPER ------------------------------------------------------------------------------------------------------------
@@ -85,9 +89,17 @@ void menu_wrapper(draw_menu func, int x) {
 // MENUS --------------------------------------------------------------------------------------------------------------
 
 void main_menu_draw(int x) {
-    middle(3,"IMMORTAL COMBAT");
-    middle(4,"by:Profit");
-    line(HEIGHT - 5);
-    (x % 2 == 0) ? side(HEIGHT - 4, " > START", "") : side(HEIGHT - 4, "   START", "");
-    (x % 2 == 1) ? side(HEIGHT - 3, " > QUIT", "") : side(HEIGHT - 3, "   QUIT", "");
+    middle(HEIGHT - 10, "+-----------+");
+    middle(HEIGHT - 9,"| by:Profit |");
+    line(HEIGHT - 8);
+    (x % 3 == 0) ? side(HEIGHT - 6, " > START GAME", "") : side(HEIGHT - 6, "   START GAME", "");
+    (x % 3 == 1) ? side(HEIGHT - 5, " > LOAD GAME", "") : side(HEIGHT - 5, "   LOAD GAME", "");
+    (x % 3 == 2) ? side(HEIGHT - 4, " > QUIT", "") : side(HEIGHT - 4, "   QUIT", "");
+}
+
+void quit_menu_draw(int x) {
+    middle(3, "Are you sure?");
+    line(HEIGHT - 8);
+    (x % 2 == 0) ? side(HEIGHT - 5, " > YES", "") : side(HEIGHT - 5, "   YES", "");
+    (x % 2 == 1) ? side(HEIGHT - 4, " > NO", "") : side(HEIGHT - 4, "   NO", "");
 }
