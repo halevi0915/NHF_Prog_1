@@ -69,7 +69,7 @@ int diff_menu() {
         }
         menu_wrapper(diff_menu_draw, x);
     }
-    
+
 }
 
 int debug(Game game) {
