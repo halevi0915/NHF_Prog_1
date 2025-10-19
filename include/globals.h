@@ -4,13 +4,13 @@
 #include "player.h"
 #include "enemy.h"
 
-extern Player default_player;
-
 extern int heal_amount;
 
 extern float easy_mult;
 extern float normal_mult;
 extern float hard_mult;
+
+extern Player default_player;
 
 extern Enemy forest_enemy_1;
 extern Enemy forest_enemy_2;

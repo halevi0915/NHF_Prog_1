@@ -65,8 +65,7 @@ void side(int row, char msg_1[], char msg_2[]) {
     mvprintw(row, WIDTH - (3 + strlen(msg_2)), "%s", msg_2);    // es WIDTH - 3
 }
 
-// megrajzolja az alap kinézetet
-// vonalak minden oldalon
+// megrajzolja az alap kinézetet - vonalak minden oldalon
 void draw_base() {
     for (int i = 0; i < HEIGHT; ++i) {
         mvprintw(i, 2, "%s", "|");
@@ -81,7 +80,7 @@ void draw_base() {
 typedef void (*draw_menu)(int x);
 typedef void (*draw_game)(int x, Game game);
 
-// egy wrapper minden menuhoz hogy clear-draw_base aztan refresh
+// clear - draw base - refresh combp
 void menu_wrapper(draw_menu func, int x) {
     clear();
     draw_base();

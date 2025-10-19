@@ -5,7 +5,7 @@
 // globals
 int heal_amount = 40;
 
-// difficulty multipilers - enemy stats
+// difficulty multipilers - enemy statokon változtat
 float easy_mult = 0.8;
 float normal_mult = 1;
 float hard_mult = 1.6;
