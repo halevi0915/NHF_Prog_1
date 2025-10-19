@@ -27,7 +27,6 @@ typedef struct p {
     int meteor_fire;        // 1
 
     int heal_potion;        // 3
-    //inventory idk how
 } Player;
 
 // Player heal(Player p, float diff) {
