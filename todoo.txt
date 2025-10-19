@@ -7,3 +7,10 @@ ASCII IMPORT
 vagy nem mivel lehet mashova nem is kell ascii art
 ha keves kell akkor lehet hardcode-olni 
 - hátrány: nem lehet \-t hasznalni
+
+
+
+
+- balance enemies
+
+

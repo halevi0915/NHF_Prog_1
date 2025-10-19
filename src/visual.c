@@ -1,4 +1,6 @@
 #include "visual.h"
+#include "game.h"
+#include "logic.h"
 
 // INIT SCREEN
 
@@ -77,6 +79,7 @@ void draw_base() {
 // WRAPPER ------------------------------------------------------------------------------------------------------------
 
 typedef void (*draw_menu)(int x);
+typedef void (*draw_game)(int x, Game game);
 
 // egy wrapper minden menuhoz hogy clear-draw_base aztan refresh
 void menu_wrapper(draw_menu func, int x) {
@@ -86,9 +89,17 @@ void menu_wrapper(draw_menu func, int x) {
     refresh();
 }
 
+void game_wrapper(draw_game func, int x, Game game) {
+    clear();
+    draw_base();
+    func(x, game);
+    refresh();
+}
+
 // MENUS --------------------------------------------------------------------------------------------------------------
 
 void main_menu_draw(int x) {
+    middle(3, "Journey of the Wizard");
     middle(HEIGHT - 10, "+-----------+");
     middle(HEIGHT - 9,"| by:Profit |");
     line(HEIGHT - 8);
@@ -102,4 +113,54 @@ void quit_menu_draw(int x) {
     line(HEIGHT - 8);
     (x % 2 == 0) ? side(HEIGHT - 5, " > YES", "") : side(HEIGHT - 5, "   YES", "");
     (x % 2 == 1) ? side(HEIGHT - 4, " > NO", "") : side(HEIGHT - 4, "   NO", "");
+}
+
+void diff_menu_draw(int x) {
+    middle(3, "Select a difficulty!");
+    line(HEIGHT - 8);
+    (x % 3 == 0) ? side(HEIGHT - 6, " > EASY", "") : side(HEIGHT - 6, "   EASY", "");
+    (x % 3 == 1) ? side(HEIGHT - 5, " > NORMAL", "") : side(HEIGHT - 5, "   NORMAL", "");
+    (x % 3 == 2) ? side(HEIGHT - 4, " > HARD", "") : side(HEIGHT - 4, "   HARD", "");
+}
+
+void debug_draw(int x, Game game) {
+    switch (x % 3) {
+        case 0:
+            middle(3, format_str_int("turn: %d", game.turn));
+            middle(4, format_str_int("stage: %d", game.stage));
+            middle(5, format_str_int("diff: %d", game.diff));
+            break;
+        case 1:
+            middle(3, format_str_int("lvl: %d", game.player.lvl));
+            middle(4, format_str_int("exp: %d", game.player.exp));
+            middle(5, format_str_int("next_level_exp: %d", game.player.next_level_exp));
+            middle(6, format_str_int("max_hp: %d", game.player.max_hp));
+            middle(7, format_str_int("hp: %d", game.player.hp));
+            middle(8, format_str_int("hp_regen: %d", game.player.hp_regen));
+            middle(9, format_str_int("max_mana: %d", game.player.max_mana));
+            middle(10, format_str_int("mana: %d", game.player.mana));
+            middle(11, format_str_int("mana_regen: %d", game.player.mana_regen));
+            middle(12, format_str_int("armor: %d", game.player.armor));
+            middle(13, format_str_int("zap_cost: %d", game.player.zap_cost));
+            middle(14, format_str_int("zap_dmg: %d", game.player.zap_dmg));
+            middle(15, format_str_int("charge_cost: %d", game.player.charge_cost));
+            middle(16, format_str_int("charge_up: %d", game.player.charge_up));
+            middle(17, format_str_int("meteor_cost: %d", game.player.meteor_cost));
+            middle(18, format_str_int("meteor_dmg: %d", game.player.meteor_dmg));
+            middle(19, format_str_int("meteor_fire: %d", game.player.meteor_fire));
+            middle(20, format_str_int("heal_potion: %d", game.player.heal_potion));
+            break;
+        case 2:
+            middle(3, format_str_str("name: %s", game.enemy.name));
+            middle(4, format_str_int("max_hp: %d", game.enemy.max_hp));
+            middle(5, format_str_int("hp: %d", game.enemy.hp));
+            middle(6, format_str_int("armor: %d", game.enemy.armor));
+            middle(7, format_str_int("exp_reward: %d", game.enemy.exp_reward));
+            middle(8, format_str_int("fire: %d", game.enemy.fire));
+            break;
+    }
+    line(HEIGHT - 8);
+    (x % 3 == 0) ? side(HEIGHT - 6, " > GAME", "") : side(HEIGHT - 6, "   GAME", "");
+    (x % 3 == 1) ? side(HEIGHT - 5, " > PLAYER", "") : side(HEIGHT - 5, "   PLAYER", "");
+    (x % 3 == 2) ? side(HEIGHT - 4, " > ENEMY", "") : side(HEIGHT - 4, "   ENEMY", "");
 }
