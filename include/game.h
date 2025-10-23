@@ -1,17 +1,19 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "player.h"
-#include "enemy.h"
+#include "logic.h"
+#include "globals.h"
+#include "visual.h"
 
-typedef struct g {
-    Player player;
-    Enemy enemy;
-    int turn;
-    int stage;
-    int diff;
-} Game;
+Game init_new_game(float diff);
+void game_loop(Game g);
 
-Game start_new_game();
+char player_turn(Game g);
+
+Game enemy_attack(Game g);
+Game enemy_heal(Game g);
+
+Enemy reset_enemy(Enemy e);
+Enemy scale_enemy(Enemy e, float diff);
 
 #endif

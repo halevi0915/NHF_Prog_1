@@ -12,5 +12,10 @@ ha keves kell akkor lehet hardcode-olni
 
 
 - balance enemies
+- universal formatted str funcs
+- universal wrapper
+- use pointers with sturcts and short the globals.h
+- improve viuals
+- then can advance to game loop
 
 

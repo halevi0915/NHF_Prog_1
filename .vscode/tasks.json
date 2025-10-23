@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build ncurses",
+            "label": "build",
             "type": "shell",
             "command": "C:/msys64/mingw64/bin/gcc.exe",
             "args": [

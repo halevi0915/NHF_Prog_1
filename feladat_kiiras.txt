@@ -1,0 +1,19 @@
+Készíts egy játékot, amelyben egy varázslót irányítva kell különböző szörnyeket legyőzve minél erősebbé válni.
+
+- Tartalmazzon különböző ellenségeket és főellenségeket.
+- Erősödni különböző tárgyakkal lehet amiket a varázsló szintlépése után lehet válsztani.
+- Szintet lépni ellenségek legyőzésével lehet.
+- A harc a játékos és az ellenség felváltott akciója amíg meg nem hal valameik fél.
+- Akciók a játékos féltől lehet:
+    - 3 képesség amik manába kerülnek:
+        - Zap: megrázza az ellenséget
+        - Overcharge: felerősíti a következő képességet
+        - Meteor Shower: egy meteorral sebzi ill felgyújtja az ellenséget
+    - Pihenés: manát tölt vissza
+    - Gyógyital ivás: életerőt tölt vissza, viszont ebből limitált darab van.
+- Akciók az ellenségtől lehet: támadás vagy gyógyítás.
+- A játék célja, hogy minél messzebb jusson a játékos.
+- A játék akkor ér véget ha meghal a játékos.
+
+- Megjelenítés parancssori felületen keresztül működjön, ahol a játékos választja ki a következő akciót.
+- Legyen lehetőség egy játék mentésére ill betöltésére.
