@@ -5,15 +5,9 @@
 #include "globals.h"
 #include "visual.h"
 
-Game init_new_game(float diff);
-void game_loop(Game g);
-
-char player_turn(Game g);
-
-Game enemy_attack(Game g);
-Game enemy_heal(Game g);
-
-Enemy reset_enemy(Enemy e);
-Enemy scale_enemy(Enemy e, float diff);
+Enemy scale_enemy(Enemy* e, float diff);
+Enemy generate_enemy(float diff, int stage);
+Enemy generate_boss(float diff, int stage);
+Game create_new_game(float diff);
 
 #endif

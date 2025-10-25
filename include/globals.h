@@ -1,6 +1,14 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+extern const int heal_amount;
+extern const int enemy_heal_amount;
+extern const int fire_dmg;
+
+extern const float easy_diff_mult;
+extern const float normal_diff_mult;
+extern const float hard_diff_mult;
+
 typedef struct Player {
     int lvl;
     int exp;
@@ -21,6 +29,7 @@ typedef struct Player {
 
     int charge_cost;
     int charge_up;
+    int current_charge;
 
     int meteor_cost;
     int meteor_dmg;
@@ -41,39 +50,18 @@ typedef struct Enemy {
 
 typedef struct Game {
     Player player;
-    Enemy enemy;
+    Enemy enemy;        
     int turn;
     int stage;
     float diff;
 } Game;
 
-extern int heal_amount;
-extern int enemy_heal_amount;
-extern int fire_dmg;
+extern const Enemy forest_enemies[];
+extern const Enemy cave_enemies[];
+extern const Enemy castle_enemies[];
 
-extern float easy_diff_mult;
-extern float normal_diff_mult;
-extern float hard_diff_mult;
-
-extern Player default_player;
-
-extern Enemy forest_enemy_1;
-extern Enemy forest_enemy_2;
-extern Enemy forest_enemy_3;
-extern Enemy forest_enemy_4;
-
-extern Enemy cave_enemy_1;
-extern Enemy cave_enemy_2;
-extern Enemy cave_enemy_3;
-extern Enemy cave_enemy_4;
-
-extern Enemy castle_enemy_1;
-extern Enemy castle_enemy_2;
-extern Enemy castle_enemy_3;
-extern Enemy castle_enemy_4;
-
-extern Enemy forest_boss;
-extern Enemy cave_boss;
-extern Enemy castle_boss;
+extern const Enemy forest_boss;
+extern const Enemy cave_boss;
+extern const Enemy castle_boss;
 
 #endif

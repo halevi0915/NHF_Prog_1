@@ -1,15 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <time.h>
 
 #include "logic.h"
 
-// max
+// returns the bigger
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
-// min
+// returns the smaller
 int min(int a, int b) {
     return (a < b) ? a : b;
 }
@@ -20,30 +21,12 @@ int randint(int start, int end) {
     return (rand()%(end - start + 1)) + start;
 }
 
-// return a formatted str with an int
-char* format_str_int(char msg[], int value) {
+// return a formatted str with the values
+char* format_string(const char* format, ...) {
     static char buffer[50];
-    sprintf(buffer, msg, value);
+    va_list args;
+    va_start(args, format);
+    vsprintf(buffer, format, args);
+    va_end(args);
     return buffer;
-}
-
-// return a formatted str with 2 int
-char* format_str_2int(char msg[], int value1, int value2) {
-    static char buffer[50];
-    sprintf(buffer, msg, value1, value2);
-    return buffer;
-}
-
-// return a formatted str with a float
-char* format_str_float(char msg[], float value) {
-    static char buffer[50];
-    sprintf(buffer, msg, value);
-    return buffer;
-}
-
-// return a formatted str with a str
-char* format_str_str(char msg[], char value[]) {
-    static char buffer[50];
-    sprintf(buffer, msg, value);
-    return buffer;
-}
+};

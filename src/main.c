@@ -14,8 +14,8 @@ int main() {
         switch (main_result) {
             case 0:
                 float diff = diff_menu();
-                Game game = init_new_game(diff);
-                debug(game);
+                Game game = create_new_game(diff);
+                debug(&game);
                 break;
             // case 1:
             //     int load_result = load_game()

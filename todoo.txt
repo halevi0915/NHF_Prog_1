@@ -1,3 +1,33 @@
+FUTURE:
+- insane comments
+
+- balance enemies
+- write story
+- menu for lore
+- improve viuals
+
+- text animation???
+
+NEXT TODO NOTES:
+- stage 0 gives castle enemies
+
+STURCTURE
+
+there are enemy constants in global - u copy it and use that
+functions take the pointers of the used enemy/player/game
+game is created in main then passed as a pointer
+player is created at game init and passed as a pointer
+x is created in the menu logic and passed as a pointer
+
+stage:
+0 forest
+1 cave
+2 castle
+
+turn:
+0 player
+1 enemy
+
 ASCII IMPORT
 - 2d array
 - file_handler.c
@@ -7,15 +37,3 @@ ASCII IMPORT
 vagy nem mivel lehet mashova nem is kell ascii art
 ha keves kell akkor lehet hardcode-olni 
 - hátrány: nem lehet \-t hasznalni
-
-
-
-
-- balance enemies
-- universal formatted str funcs
-- universal wrapper
-- use pointers with sturcts and short the globals.h
-- improve viuals
-- then can advance to game loop
-
-
