@@ -1,15 +1,14 @@
 #include "game.h"
 
+#include "visual.h"
 #include "logic.h"
 #include "globals.h"
-#include "visual.h"
 
-// scales the enemy hp, armor and exp reward by the difficulty level
-Enemy scale_enemy(Enemy* e, float diff) {
-    e->max_hp *= diff;
-    e->hp = e->max_hp;
-    e->armor *= diff;
-    e->exp_reward *= (1 / diff);
+Enemy scale_enemy(Enemy* enemy_ptr, float diff) {
+    enemy_ptr->max_hp *= diff;
+    enemy_ptr->hp = enemy_ptr->max_hp;
+    enemy_ptr->armor *= diff;
+    enemy_ptr->exp_reward *= (1 / diff);
 }
 
 Enemy generate_enemy(float diff, int stage) {
@@ -42,11 +41,9 @@ Game create_new_game(float diff) {
 
         .max_hp = 100,
         .hp = 100,
-        .hp_regen = 0,
 
         .max_mana = 200,
         .mana = 200,
-        .mana_regen = 0,
         
         .armor = 0,
 
@@ -74,37 +71,127 @@ Game create_new_game(float diff) {
     return new_game;
 }
 
-// void game_loop(Game g) {
-//     while (g.player.hp != 0) {
-//         if (g.turn) {                   // enemy turn
-            
-//         } else {                        // player turn
-            
-//         }
-//         g.turn = (g.turn) ? 0 : 1;
-//     }
-// }
+char* zap(Game* game_ptr) {
+    int dmg = game_ptr->player.zap_dmg * (game_ptr->player.current_charge * charge_mult + 1) * (1 - (game_ptr->enemy.armor / 100));
+    game_ptr->enemy.hp = max(game_ptr->enemy.hp - dmg, 0);
+    game_ptr->player.mana -= game_ptr->player.zap_cost;
+    return format_string("%s got zapped! (%d dmg)", game_ptr->enemy.name, dmg);
+}
 
-// char player_turn(Game g) {
-//     switch (game_action(g))
-//     {
-//     case 0:
-//         return 'a';
-//         break;
+char* charge(Game* game_ptr) {
+    game_ptr->player.current_charge += 1;
+    game_ptr->player.mana -= game_ptr->player.charge_cost;
+    return format_string("Overcharge successful! (%dx)", game_ptr->player.current_charge);
+}
+
+char* meteor(Game* game_ptr) {
+    int dmg = game_ptr->player.meteor_dmg * (game_ptr->player.current_charge * charge_mult + 1) * (1 - (game_ptr->enemy.armor / 100));
+    game_ptr->enemy.hp = max(game_ptr->enemy.hp - dmg, 0);
+    game_ptr->player.mana -= game_ptr->player.meteor_cost;
+    return format_string("%s got blasted by a meteor! (%d dmg)", game_ptr->enemy.name, dmg);
+}
+
+char* player_heal(Game* game_ptr) {
+    game_ptr->player.hp = min(game_ptr->player.hp + heal_amount, game_ptr->player.max_hp);
+    game_ptr->player.heal_potion -= 1;
+    return format_string("You healed! (+%d hp)", heal_amount);
+}
+
+char* rest(Game* game_ptr) {
+    game_ptr->player.mana = min(game_ptr->player.mana + rest_amount, game_ptr->player.max_mana);
+    return format_string("You rested! (+%d mana)", rest_amount);
+}
+
+int player_turn(Game* game_ptr) {
+    int turn_running = 1;
+    int pause_result;
+    while (turn_running) {
+        switch (game_action(game_ptr)) {
+            case 0: // zap
+                if (game_ptr->player.mana >= game_ptr->player.zap_cost) {
+                    game_msg(zap(game_ptr), 1, game_ptr);
+                    turn_running = 0;
+                } else game_msg("Not enough mana!", 0, game_ptr);
+                break;
+            case 1: // overcharge
+                if (game_ptr->player.mana >= game_ptr->player.charge_cost) {
+                    game_msg(charge(game_ptr), 1, game_ptr);
+                    turn_running = 0;
+                } else game_msg("Not enough mana!", 0, game_ptr);
+                break;
+            case 2: // meteor shower
+                if (game_ptr->player.mana >= game_ptr->player.meteor_cost) {
+                    game_msg(meteor(game_ptr), 1, game_ptr);
+                    turn_running = 0;
+                } else game_msg("Not enough mana!", 0, game_ptr);
+                break;
+            case 3: // heal
+                if (game_ptr->player.hp < game_ptr->player.max_hp) {
+                    if (game_ptr->player.heal_potion > 0) {
+                        game_msg(player_heal(game_ptr), 1, game_ptr);
+                        turn_running = 0;
+                    } else game_msg("No health potions remaning!", 0, game_ptr);
+                } else game_msg("Cant heal! (hp is full)", 0, game_ptr);
+                break;
+            case 4: // rest
+                if (game_ptr->player.mana < game_ptr->player.max_mana) {
+                    game_msg(rest(game_ptr), 1, game_ptr);
+                    turn_running = 0;
+                } else game_msg("Cant rest! (mana is full)", 0, game_ptr);
+                break;
+            case -1: // pause
+                pause_result = pause_menu();
+                if (pause_result) return pause_result; // 0 resume 1 save 2 quit
+                break;
+        };
+    }
+    return 0; 
+}
+
+void enemy_turn(Game* gmae_ptr) {
     
-//     default:
-//         return 'h';
-//         break;
-//     }
-// }
+}
 
-// Game enemy_attack(Game g) {
-//     g.player.hp = max(g.player.hp - g.enemy.dmg, 0);
-//     return g;
-// }
+void player_status(Game* game_ptr) {
 
-// Game enemy_heal(Game g) {
-//     g.enemy.hp = min(g.enemy.hp + enemy_heal_amount, g.enemy.max_hp);
-//     return g;
-// }
+}
 
+void enemy_status(Game* game_ptr) {
+    
+}
+
+int enemy_death(Game* game_ptr) {
+
+}
+
+int player_death(Game* game_ptr) {
+    
+}
+
+void game_loop(Game* game_ptr) {
+    int game_running = 1;
+    while (game_running) {    
+        if (game_ptr->turn) {
+            player_status(game_ptr);
+            // check player death
+            switch (player_turn(game_ptr)) {
+                case 0:
+                    game_ptr->turn = 0;
+                case 1:
+                    //save_game(game_ptr);
+                    break;
+                case 2:
+                    game_running = 0;
+                    break;
+            };
+            // check enemy death
+        } else {
+            enemy_status(game_ptr);
+            // check enemy death
+            enemy_turn(game_ptr);
+            // check player death
+            game_msg("enemy turn", 0, game_ptr);
+            game_ptr->turn = 1;
+        }
+    }
+}

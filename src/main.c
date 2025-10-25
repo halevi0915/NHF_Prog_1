@@ -1,31 +1,35 @@
 #include <ncurses.h>
-#include <stdbool.h>
+#include <stdio.h>
 
-#include "visual.h"
 #include "game.h"
+#include "visual.h"
 
 int main() {
     init_screen();
 
-    int running = true;
+    int program_running = 1;
+    Game game;
 
-    while (running) {
-        int main_result = main_menu(); // 0: start_game 1: load_game 2: quit_game    
-        switch (main_result) {
+    while (program_running) {
+        switch (main_menu()) {  // 0: start_game 1: load_game 2: quit_game
             case 0:
                 float diff = diff_menu();
-                Game game = create_new_game(diff);
+                game = create_new_game(diff);
                 debug(&game);
+                game_loop(&game);
+                //quit anim
                 break;
             // case 1:
-            //     int load_result = load_game()
-            //     break;
+                // if (save_present()) game = load_game();
+                // break;
             case 2:
-                int quit_result = quit_menu(); // 0: yes 1: no
-                running = quit_result;
+                program_running = quit_menu(); // 0: yes 1: no
                 break;
         }
     }
+    // quit anim
+    printf("%d malloc\n", malloc_counter);
+    printf("%d free\n", free_counter);
     endwin();
     return 0;
 }

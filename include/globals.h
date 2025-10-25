@@ -3,11 +3,16 @@
 
 extern const int heal_amount;
 extern const int enemy_heal_amount;
+extern const int rest_amount;
 extern const int fire_dmg;
+extern const int charge_mult;
 
 extern const float easy_diff_mult;
 extern const float normal_diff_mult;
 extern const float hard_diff_mult;
+
+extern int free_counter;
+extern int malloc_counter;
 
 typedef struct Player {
     int lvl;
@@ -16,11 +21,9 @@ typedef struct Player {
 
     int max_hp;
     int hp;
-    int hp_regen;
 
     int max_mana;
     int mana;
-    int mana_regen;
 
     int armor;
 
