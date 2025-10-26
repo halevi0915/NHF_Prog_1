@@ -2,10 +2,14 @@
 
 // GLOBALS ------------------------------------------------------------------------------------------------------------
 const int heal_amount = 40;
-const int enemy_heal_amount = 10;
+const int enemy_heal_amount = 20;
 const int rest_amount = 50;
 const int fire_dmg = 10;
 const int charge_mult = 2;
+const float enemy_heal_threshold = 0.3;
+const int enemy_per_stage = 4;
+const int stage_count = 3;
+const int exp_scale = 10;
 
 const float easy_diff_mult = 0.8;
 const float normal_diff_mult = 1;
@@ -19,8 +23,8 @@ const Enemy forest_enemies[] = {
 {
     .name = "Slime",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
+    .hp = 10,
     .armor = 10,
     .exp_reward = 10,
     .fire = 0
@@ -28,8 +32,8 @@ const Enemy forest_enemies[] = {
 {
     .name = "Wolf",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
+    .hp = 10,
     .armor = 10,
     .exp_reward = 10,
     .fire = 0
@@ -37,8 +41,8 @@ const Enemy forest_enemies[] = {
 {
     .name = "Sapling",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
+    .hp = 10,
     .armor = 10,
     .exp_reward = 10,
     .fire = 0
@@ -46,8 +50,8 @@ const Enemy forest_enemies[] = {
 {
     .name = "Forest Elf",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
+    .hp = 10,
     .armor = 10,
     .exp_reward = 10,
     .fire = 0

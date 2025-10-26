@@ -6,6 +6,10 @@ extern const int enemy_heal_amount;
 extern const int rest_amount;
 extern const int fire_dmg;
 extern const int charge_mult;
+extern const float enemy_heal_threshold;
+extern const int enemy_per_stage;
+extern const int stage_count;
+extern const int exp_scale;
 
 extern const float easy_diff_mult;
 extern const float normal_diff_mult;
@@ -56,7 +60,9 @@ typedef struct Game {
     Enemy enemy;        
     int turn;
     int stage;
+    int enemy_index;
     float diff;
+    int is_story;
 } Game;
 
 extern const Enemy forest_enemies[];

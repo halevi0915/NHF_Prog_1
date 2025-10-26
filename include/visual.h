@@ -15,6 +15,7 @@ int pause_menu();
 
 void debug(Game* game);
 int game_action(Game* game);
-void game_msg(char* msg, bool is_dynamic, Game* game);
+void game_msg(char* msg, int is_dynamic, Game* game);
+void game_over(Game* game_ptr);
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "globals.h"
 
-Game create_new_game(float diff);
+Game create_new_game();
 void game_loop(Game* game_ptr);
 
 #endif

@@ -1,6 +1,5 @@
 #include <ncurses.h>
 #include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "visual.h"
@@ -59,7 +58,7 @@ void line(int row) {
 }
 
 // az adott sor közepére irja az msg-t
-void middle(int row, char* msg, bool is_dynamic) {
+void middle(int row, char* msg, int is_dynamic) {
     int msg_len = strlen(msg);
     int x_pos = (WIDTH / 2) - (msg_len / 2);
     mvprintw(row, x_pos, "%s", msg);
@@ -67,7 +66,7 @@ void middle(int row, char* msg, bool is_dynamic) {
 }
 
 // az adott sor két szélére irja a két msg-t (ha csak egyik oldalra irunk a masik ures)
-void side(int row, char* msg_1, char* msg_2, bool is_dynamic_1, bool is_dynamic_2) {
+void side(int row, char* msg_1, char* msg_2, int is_dynamic_1, int is_dynamic_2) {
     mvprintw(row, 3, "%s", msg_1);                              // 3-al beljebb a draw_base elferese miatt
     mvprintw(row, WIDTH - (3 + strlen(msg_2)), "%s", msg_2);    // es WIDTH - 3
     if (is_dynamic_1) {free(msg_1); ++free_counter;}
@@ -103,7 +102,7 @@ void draw_header(Game* game_ptr) {
 
 typedef void (*draw_menu)(int x);
 typedef void (*draw_game)(int x, Game* game_ptr);
-typedef void (*draw_msg)(char* msg, bool is_dynamic, Game* game_ptr);
+typedef void (*draw_msg)(char* msg, int is_dynamic, Game* game_ptr);
 
 // clear - draw base - refresh combo
 void menu_wrapper(draw_menu func, int x) {
@@ -121,7 +120,7 @@ void game_wrapper(draw_game func, int x, Game* game_ptr) {
     refresh();
 }
 
-void msg_wrapper(draw_msg func, char* msg, bool is_dynamic, Game* game_ptr) {
+void msg_wrapper(draw_msg func, char* msg, int is_dynamic, Game* game_ptr) {
     clear();
     draw_base();
     draw_header(game_ptr);
@@ -214,11 +213,18 @@ void game_action_draw(int x, Game* game_ptr) {
     (x % 5 == 4) ? side(HEIGHT - 4, " > REST", "", 0, 0) : side(HEIGHT - 4, "   REST", "", 0, 0);
 }
 
-void game_msg_draw(char* msg, bool is_dynamic, Game* game_ptr) {
+void game_msg_draw(char* msg, int is_dynamic, Game* game_ptr) {
     if (is_dynamic) middle(12, msg, 1);
     else middle(12, msg, 0);
     line(HEIGHT - 10);
     middle(HEIGHT - 8, "< Press Space >", 0);
+}
+
+void game_over_draw(int x, Game* game_ptr) {
+    middle(3, "Game Over", 0);
+    middle(5, format_string("stage: %d", game_ptr->stage), 1);
+    line(HEIGHT - 10);
+    middle(HEIGHT - 8, "< Main menu >", 0);
 }
 
 // MENUS --------------------------------------------------------------------------------------------------------------
@@ -231,14 +237,9 @@ int main_menu() {
         menu_wrapper(main_menu_draw, x);
         key = getch();
         switch (key) {
-        case 'w':
-            x = (x > 0) ? (x - 1) : option_count - 1;
-            break;
-        case 's':
-            x = (x < option_count - 1) ? (x + 1) : 0;
-            break;
-        case '\n':
-            return x;
+            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n': return x;
         }
     }
     
@@ -252,14 +253,9 @@ int quit_menu() {
         menu_wrapper(quit_menu_draw, x);
         key = getch();
         switch (key) {
-        case 'w':
-            x = (x > 0) ? (x - 1) : option_count - 1;
-            break;
-        case 's':
-            x = (x < option_count - 1) ? (x + 1) : 0;
-            break;
-        case '\n':
-            return x;
+            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n': return x;
         }
     }
 }
@@ -272,17 +268,13 @@ float diff_menu() {
         menu_wrapper(diff_menu_draw, x);
         key = getch();
         switch (key) {
-        case 'w':
-            x = (x > 0) ? (x - 1) : option_count - 1;
-            break;
-        case 's':
-            x = (x < option_count - 1) ? (x + 1) : 0;
-            break;
-        case '\n':
-            switch (x) {
-                case 0: return easy_diff_mult;
-                case 1: return normal_diff_mult;
-                case 2: return hard_diff_mult;
+            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n':
+                switch (x) {
+                    case 0: return easy_diff_mult;
+                    case 1: return normal_diff_mult;
+                    case 2: return hard_diff_mult;
             }
         }
     }
@@ -296,16 +288,11 @@ int pause_menu() {
         menu_wrapper(pause_menu_draw, x);
         key = getch();
         switch (key) {
-        case 'w':
-            x = (x > 0) ? (x - 1) : option_count - 1;
-            break;
-        case 's':
-            x = (x < option_count - 1) ? (x + 1) : 0;
-            break;
-        case '\n':
-            return x;
-        case 27: //esc
-            return 0; // resume
+            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n': return x;
+            case 27: //esc
+                return 0; // resume
         }
     }
 }
@@ -314,20 +301,14 @@ void debug(Game* game_ptr) {
     int x = 0;
     int option_count = 3;
     char key;
-    bool running = true;
+    int running = true;
     while (running) {
         game_wrapper(debug_draw, x, game_ptr);
         key = getch();
         switch (key) {
-        case 'w':
-            x = (x > 0) ? (x - 1) : option_count - 1;
-            break;
-        case 's':
-            x = (x < option_count - 1) ? (x + 1) : 0;
-            break;
-        case '\n':
-            running = false;
-            break;
+            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n': running = false; break;
         }
     }
     
@@ -341,24 +322,29 @@ int game_action(Game* game_ptr) {
         game_wrapper(game_action_draw, x, game_ptr);
         key = getch();
         switch (key) {
-        case 'w':
-            x = (x > 0) ? (x - 1) : option_count - 1;
-            break;
-        case 's':
-            x = (x < option_count - 1) ? (x + 1) : 0;
-            break;
-        case '\n':
-            return x;
-        case 27: //esc
-            return -1; // for pause menu
+            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n': return x;
+            case 27: //esc
+                return -1; // for pause menu
         }
     }
     
 }
 
-void game_msg(char* msg, bool is_dynamic, Game* game_ptr) {
+void game_msg(char* msg, int is_dynamic, Game* game_ptr) {
     char key;
     msg_wrapper(game_msg_draw, msg, is_dynamic, game_ptr);
+    while (true) {
+        key = getch();
+        if (key == ' ') break;
+    }
+    
+}
+
+void game_over(Game* game_ptr) {
+    char key;
+    game_wrapper(game_over_draw, 0, game_ptr);
     while (true) {
         key = getch();
         if (key == ' ') break;
