@@ -1,0 +1,23 @@
+Journey of The Wizard
+
+FELHASZNÁLÓI DOKUMENTÁCIÓ:
+
+A Journey of the Wizard egy szintekből álló szerepjáték a terminálban.
+A Játék célja a gonosz varázsló legyőzése miután több szinten is átverekedte magát a játékos. 
+
+Egy játék kezdetekor a játékos választ egy nehézségi fokozatot (Könnyű, normál, nehéz) ami többek között az ellenségek nehézségén változtat.
+A játékos egy varázslót irányít harcai alatt, egy szint 4 szimpla ellenségből illetve egy főellenségből áll.
+Az ellenségek legyőzése tapasztalati ponttal jutalmaz, amivel szintet lehet lépni.
+A szintlépés a játékos erősödési módja, minden szintlépés után 3 különböző tárgy közül lehet választani.
+Egyes tárgyak lehet csak az életerőt növelik vagy csak az adott képesség erejét. Lehet hogy különleges képességet adnak.
+Harcok során a varázsló képességeket használ, mint például a villámcsapás vagy a meteoreső, ezek varázserőbe (mana) kerülnek amit pihenéssel lehet visszanyerni.
+
+A menükben navigálni a 'w' és az 's' gombokkal lehet, majd az enter gombbal kiválasztani az adott opciót.
+Egy Játék során üzeneteket a space-el lehet elfogadni.
+Esc segítségével elérhető a pause menü ahol menteni vagy esetleg kilépni lehet.
+Mentés betöltésére a főmenüben van lehetőség.
+
+Jó szórakozást!
+
+PROGRAMOZÓI DOKUMENTÁCIÓ:
+

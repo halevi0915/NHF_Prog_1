@@ -1,3 +1,5 @@
+#include "debugmalloc.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -7,17 +9,17 @@
 #include "globals.h"
 
 // returns the bigger
-int max(int a, int b) {
+int max(const int a, const int b) {
     return (a > b) ? a : b;
 }
 
 // returns the smaller
-int min(int a, int b) {
+int min(const int a, const int b) {
     return (a < b) ? a : b;
 }
 
 // returns a random int in the range including both ends
-int randint(int start, int end) {
+int randint(const int start, const int end) {
     srand(time(NULL));
     return (rand()%(end - start + 1)) + start;
 }
@@ -34,7 +36,7 @@ char* format_string(const char* format, ...) {
 
     char* buffer = malloc(len + 1);
     ++malloc_counter;
-    if (!buffer) {printf("alloc error"); exit(1);};  // alloc error
+    if (buffer == NULL) {printf("alloc error"); exit(1);};  // alloc error
 
     va_start(args, format);
     vsnprintf(buffer, len + 1, format, args);

@@ -1,0 +1,25 @@
+Journey of The Wizard
+
+A Journey of The Wizard egy szintekből álló szerepjáték a terminálban angol nyelven. (A dokumentácóba megtalálható lesz a fordítás)
+A Játék célja a gonosz varázsló legyőzése miután több szinten is átverekedte magát a játékos. 
+
+Egy játék kezdetekor a játékos választ egy nehézségi fokozatot (Könnyű, normál, nehéz) ami többek között az ellenségek nehézségén változtat.
+A játékos egy varázslót irányít harcai alatt, egy szint 4 szimpla ellenségből illetve egy főellenségből áll.
+Több szint után találkozik a játékos a gonosz varázslóval (Evil Wizard) akit ha legyőz, véget ér a játék.
+Az ellenségek legyőzése tapasztalati ponttal jutalmaz, amivel szintet lehet lépni.
+A szintlépés a játékos erősödési módja, minden szintlépés után 3 különböző tárgy közül lehet választani.
+Egyes tárgyak lehet csak az életerőt (health point - hp) növelik vagy csak az adott képesség erejét (ability strength). Lehet hogy különleges képességet adnak.
+Harcok során a varázsló képességeket (Spells) használ, mint például a villámcsapás (Zap) vagy a meteoreső (Meteorshower), ezek varázserőbe (mana point - mp) kerülnek amit pihenéssel (rest) lehet visszanyerni.
+
+A menükben navigálni a 'w' és az 's' gombokkal lehet, majd az enter gombbal kiválasztani az adott opciót.
+Egy Játék során üzeneteket a space-el lehet elfogadni.
+Esc segítségével elérhető a pause menü ahol menteni vagy esetleg kilépni lehet.
+Mentés betöltésére a főmenüben van lehetőség.
+A mentés a játék akkori állását menti ahol a játékos következik (akkor tud a pause-menuben menteni).
+betöltéskor ezt az állás kapjuk vissza.
+A mentés txt fájban tárolódik titkosítás nélkül.
+
+A játék a terminálban fog futni ahol az ASCII karakterek segítségével jelenik meg először a főmenü, majd a többi játékelem.
+A játékmenet kinézete egy alsó menüből és egy felső információs panelből áll.
+Az alsó menüben látható az éppen kiválasztott opció és annak rövid leírása (pl Rest - restores 50 mp)
+A felső menüben pedig a játékos illetve az éppen ellenünk harcoló ellenfél értékeit (stat) láthatjük.

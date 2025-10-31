@@ -1,15 +1,48 @@
-FUTURE:
-- insane comments
+TODO:
+must do:
+    visual:
+        - in game spell description when hoevered
+        - improve viuals in game - colored text
+        - random ability texts in global and just meteor_text[randint(x,y)]
+        - pause menu stats
+    internal:
+        - use enums
+        - make items
+        - item choose menu / malloc
+        - save game sys
+        - balance enemies
+        - insane comments in code
+    
 
-- balance enemies
-- write story
-- menu for lore
-- improve viuals
-- random ability texts in global and just meteor_text[randint(x,y)]
-- text animation???
+optional:
+    visual:
+        - menu for lores
+        - text animation???
+        - stat bar - no numbers
+        - ascii import, main menu/game over
+    internal:
+        - +stats, miss ch, crit ch, crit dmg, def as shield
+        - +status stun - misses turn, confuse - miss ch, poison - lessdmg more stacks
+        - multiple characters: fire wizard, lightning wizard, earth wizard, ancient wizard
+        - ancient wizard unlockable
+        - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
+        - write story
+    
+DONE
+- use const in functions
 
-NEXT TODO NOTES:
-- stage 0 gives castle enemies
+AGENDA
+
+- funcba akkor const ha sehol se valtozik
+    nem lehet const msg, game_ptr
+- minden vesszo utan space: alma, alma
+- kapcsos zarojel () { helyen van
+- standard lib-eket ott import ahol kell
+- belso import adott
+
+
+
+
 
 STURCTURE
 
