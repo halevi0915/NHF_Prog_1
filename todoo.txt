@@ -1,35 +1,48 @@
 TODO:
 must do:
     visual:
-        - in game spell description when hoevered
-        - improve viuals in game - colored text
-        - random ability texts in global and just meteor_text[randint(x,y)]
-        - pause menu stats
     internal:
-        - use enums
+        holnap analizis then
+        - miss ch, crit ch, crit dmg
+        - add to header
+        - zap stun - misses turn
+        - add status to header
         - make items
         - item choose menu / malloc
         - save game sys
         - balance enemies
         - insane comments in code
+        - stage+ adds to diff directly
+        - caps lock immune - check for W and S too
     
 
 optional:
     visual:
-        - menu for lores
-        - text animation???
-        - stat bar - no numbers
+        - transition screen when new stage
+        - transition screen when saving like save completed or smth
         - ascii import, main menu/game over
     internal:
-        - +stats, miss ch, crit ch, crit dmg, def as shield
-        - +status stun - misses turn, confuse - miss ch, poison - lessdmg more stacks
-        - multiple characters: fire wizard, lightning wizard, earth wizard, ancient wizard
-        - ancient wizard unlockable
+        - +stats: def as shield
+        - +status confuse - miss ch, poison - less dmg more stacks
         - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
-        - write story
+
     
 DONE
+- random ability texts in global and just meteor_text[randint(x,y)] ai generated
 - use const in functions
+- stat bar - no numbers
+- in game spell description when hoevered
+- improve viuals in game - full overhaul but same tools
+
+CANCELLED
+- colored text
+- text animation??? nope
+- menu for lores
+- write story
+- multiple characters: fire wizard, lightning wizard, earth wizard, ancient wizard
+- ancient wizard unlockable
+- use enums idk if good idea maybe later
+- pause menu stats
 
 AGENDA
 
@@ -39,7 +52,8 @@ AGENDA
 - kapcsos zarojel () { helyen van
 - standard lib-eket ott import ahol kell
 - belso import adott
-
+- struct valahol él onnan csak pointert adsz tovabb
+- 
 
 
 

@@ -34,13 +34,27 @@ char* format_string(const char* format, ...) {
 
     if (len < 0) {printf("format error"); exit(1);} // format error
 
-    char* buffer = malloc(len + 1);
+    char* buffer = malloc(sizeof(char) * (len + 1));
     ++malloc_counter;
-    if (buffer == NULL) {printf("alloc error"); exit(1);};  // alloc error
+    if (buffer == NULL) {printf("format str alloc error"); exit(1);};  // alloc error
 
     va_start(args, format);
     vsnprintf(buffer, len + 1, format, args);
     va_end(args);
 
+    return buffer;
+}
+
+char* bar_string(const char* text, const int current_value, const int max_value) {
+    int text_len = strlen(text);
+    int ratio = ((float)current_value / ((float)max_value / 100)) / 10;
+    char* buffer = malloc(sizeof(char) * (13 + text_len));
+    ++malloc_counter;
+    if (buffer == NULL) {printf("bar str alloc error"); exit(1);};  // alloc error
+    for (int i = 0; i < text_len; ++i) {buffer[i] = text[i];}
+    buffer[text_len + 0] = '[';
+    for (int i = 1; i <= 10; ++i) {buffer[text_len + i] = (i <= ratio) ? '#' : '-';}
+    buffer[text_len + 11] = ']';
+    buffer[text_len + 12] = '\0';
     return buffer;
 }

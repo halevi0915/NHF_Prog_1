@@ -5,5 +5,6 @@ int max(int a, int b);
 int min(int a, int b);
 int randint(int start, int end);
 char* format_string(const char* format, ...);
+char* bar_string(const char* text, const int current_value, const int max_value);
 
 #endif

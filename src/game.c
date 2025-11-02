@@ -20,6 +20,7 @@ Enemy generate_enemy(Game* game_ptr) {
             case 1: new_enemy = cave_boss; break;
             case 2: new_enemy = castle_boss; break;
         };
+        game_ptr->enemy_index = 0;
         game_ptr->stage++;
     } else {
         switch (game_ptr->stage % stage_count) {
@@ -27,8 +28,8 @@ Enemy generate_enemy(Game* game_ptr) {
             case 1: new_enemy = cave_enemies[randint(0,3)]; break;
             case 2: new_enemy = castle_enemies[randint(0,3)]; break;
         };
+        game_ptr->enemy_index++;
     }
-    game_ptr->enemy_index++;
     game_ptr->enemy = new_enemy;
     scale_enemy(game_ptr);
 }
@@ -75,34 +76,37 @@ Game create_new_game() {
 }
 
 char* zap(Game* game_ptr) {
-    int dmg = game_ptr->player.zap_dmg * (game_ptr->player.current_charge * charge_mult + 1) * (1 - (game_ptr->enemy.armor / 100));
+    int dmg = game_ptr->player.zap_dmg * max(game_ptr->player.current_charge * charge_mult, 1) * (1 - (game_ptr->enemy.armor / 100));
     game_ptr->enemy.hp = max(game_ptr->enemy.hp - dmg, 0);
     game_ptr->player.mana -= game_ptr->player.zap_cost;
-    return format_string("%s got zapped! (%d dmg)", game_ptr->enemy.name, dmg);
+    if (game_ptr->player.current_charge > 0) game_ptr->player.current_charge = 0;
+    return format_string(zap_msg[randint(0, 17)], dmg);
 }
 
 char* charge(Game* game_ptr) {
     game_ptr->player.current_charge += 1;
     game_ptr->player.mana -= game_ptr->player.charge_cost;
-    return format_string("Overcharge successful! (%dx)", game_ptr->player.current_charge);
+    return format_string(charge_msg[randint(0, 19)], game_ptr->player.current_charge);
 }
 
 char* meteor(Game* game_ptr) {
-    int dmg = game_ptr->player.meteor_dmg * (game_ptr->player.current_charge * charge_mult + 1) * (1 - (game_ptr->enemy.armor / 100));
+    int dmg = game_ptr->player.meteor_dmg * max(game_ptr->player.current_charge * charge_mult, 1) * (1 - (game_ptr->enemy.armor / 100));
     game_ptr->enemy.hp = max(game_ptr->enemy.hp - dmg, 0);
     game_ptr->player.mana -= game_ptr->player.meteor_cost;
-    return format_string("%s got blasted by a meteor! (%d dmg)", game_ptr->enemy.name, dmg);
+    game_ptr->enemy.fire += game_ptr->player.meteor_fire;
+    if (game_ptr->player.current_charge > 0) game_ptr->player.current_charge = 0;
+    return format_string(meteor_msg[randint(0, 15)], dmg);
 }
 
 char* player_heal(Game* game_ptr) {
     game_ptr->player.hp = min(game_ptr->player.hp + heal_amount, game_ptr->player.max_hp);
     game_ptr->player.heal_potion -= 1;
-    return format_string("You healed! (+%d hp)", heal_amount);
+    return format_string(heal_msg[randint(0, 19)], heal_amount);
 }
 
-char* rest(Game* game_ptr) {
+char* player_rest(Game* game_ptr) {
     game_ptr->player.mana = min(game_ptr->player.mana + rest_amount, game_ptr->player.max_mana);
-    return format_string("You rested! (+%d mana)", rest_amount);
+    return format_string(rest_msg[randint(0, 18)], rest_amount);
 }
 
 int player_turn(Game* game_ptr) {
@@ -138,7 +142,7 @@ int player_turn(Game* game_ptr) {
                 break;
             case 4: // rest
                 if (game_ptr->player.mana < game_ptr->player.max_mana) {
-                    game_msg(rest(game_ptr), 1, game_ptr);
+                    game_msg(player_rest(game_ptr), 1, game_ptr);
                     turn_running = 0;
                 } else game_msg("Cant rest! (mana is full)", 0, game_ptr);
                 break;

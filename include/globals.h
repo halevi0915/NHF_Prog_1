@@ -73,4 +73,13 @@ extern const Enemy forest_boss;
 extern const Enemy cave_boss;
 extern const Enemy castle_boss;
 
+extern const char* zap_msg[];
+extern const char* charge_msg[];
+extern const char* meteor_msg[];
+extern const char* heal_msg[];
+extern const char* rest_msg[];
+// const char* burn_msg[];
+// const char* enemy_atk_msg[];
+// const char* enemy_heal_msg[];
+
 #endif

@@ -25,14 +25,14 @@ void init_screen() {
     nodelay(stdscr, FALSE);                         // blocking input: getch() waits for next input and doesnt give err
 
     // COLOR
-    if (has_colors()) {                             // ha van color support
-        start_color();                              // init color
-        init_pair(1, COLOR_WHITE, COLOR_BLACK);     // parokba rendezi a szineket, id-kel lehet kesobb hivatkozni ra
-        init_pair(2, COLOR_RED, COLOR_BLACK);
-        init_pair(3, COLOR_GREEN, COLOR_BLACK);
-        init_pair(4, COLOR_BLUE, COLOR_BLACK);
-    }
-    attron(COLOR_PAIR(1));                          // default legyen a fekete feher
+    // if (has_colors()) {                             // ha van color support
+    //     start_color();                              // init color
+    //     init_pair(1, COLOR_WHITE, COLOR_BLACK);     // parokba rendezi a szineket, id-kel lehet kesobb hivatkozni ra
+    //     init_pair(2, COLOR_RED, COLOR_BLACK);
+    //     init_pair(3, COLOR_GREEN, COLOR_BLACK);
+    //     init_pair(4, COLOR_BLUE, COLOR_BLACK);
+    // }
+    // attron(COLOR_PAIR(1));                          // default legyen a fekete feher
 
     // ECT
     clear();                                        // clears the screen
@@ -51,7 +51,7 @@ void line(const int row) {
     t[1] = ' ';
     t[2] = '|';
     for (int i = 0; i < middle_len; i++)
-        t[3 + i] = '-';
+        t[3 + i] = '_';
     t[3 + middle_len] = '|';
     t[4 + middle_len] = ' ';
     t[5 + middle_len] = ' ';
@@ -89,18 +89,60 @@ void draw_base() {
 
 // megrajzolja az alap kinézetet - statok
 void draw_header(Game* game_ptr) {
-    side(2, "WIZARD", "", 0, 0);
-    side(3, format_string("LVL %d", game_ptr->player.lvl), "", 1, 0);
-    side(4, format_string("%d/%d EXP", game_ptr->player.exp, game_ptr->player.next_level_exp), "", 1, 0);
-    side(5, format_string("%d/%d HP", game_ptr->player.hp, game_ptr->player.max_hp), "", 1, 0);
-    side(6, format_string("%d/%d MANA", game_ptr->player.mana, game_ptr->player.max_mana), "", 1, 0);
+    char sector_separator_left[WIDTH / 3 + 1 - 4]; // -4 adjusting
+    char sector_separator_right[WIDTH / 3 + 1 - 4];
+    char sector_line_left[WIDTH / 3 + 1 - 4];
+    char sector_line_right[WIDTH / 3 + 1 - 4];
 
-    side(2, "", format_string("%s", game_ptr->enemy.name), 0, 1);
-    side(3, "", format_string("%d/%d HP", game_ptr->enemy.hp, game_ptr->enemy.max_hp), 0, 1);
-    side(4, "", format_string("%d DEF", game_ptr->enemy.armor), 0, 1);
-    side(5, "", format_string("%d EXP", game_ptr->enemy.exp_reward), 0, 1);
-    line(10);
-}
+    sector_separator_right[0] = '|';
+    sector_line_right[0] = '|';
+    for (int i = 0; i < WIDTH / 3 - 4; ++i) {
+        sector_separator_left[i] = ' ';
+        sector_separator_right[i+1] = ' ';
+        sector_line_left[i] = '_';
+        sector_line_right[i+1] = '_';
+    }
+    sector_separator_left[WIDTH / 3 - 4] = '|';
+    sector_line_left[WIDTH / 3 - 4] = '|';
+
+    sector_separator_left[WIDTH / 3 + 1 - 4] = '\0';
+    sector_separator_right[WIDTH / 3 + 1 - 4] = '\0';
+    sector_line_left[WIDTH / 3 + 1 - 4] = '\0';
+    sector_line_right[WIDTH / 3 + 1 - 4] = '\0';
+
+    for (int i = 2; i < HEIGHT - 9; ++i) {side(i, sector_separator_left, sector_separator_right, 0, 0);}
+
+    // player sector
+    side(3, format_string(" LVL %d  < Wizard >", game_ptr->player.lvl), "", 1, 0);
+    side(4, sector_line_left, sector_line_right, 0, 0);
+
+    side(6, format_string("                  %d/%d", game_ptr->player.exp, game_ptr->player.next_level_exp), "", 1, 0);
+    side(7, format_string("                  %d/%d", game_ptr->player.hp, game_ptr->player.max_hp), "", 1, 0);
+    side(8, format_string("                  %d/%d", game_ptr->player.mana, game_ptr->player.max_mana), "", 1, 0);
+    
+    side(6, bar_string(" EXP ", game_ptr->player.exp, game_ptr->player.next_level_exp), "", 1, 0);
+    side(7, bar_string(" HP  ", game_ptr->player.hp, game_ptr->player.max_hp), "", 1, 0);
+    side(8, bar_string(" MP  ", game_ptr->player.mana, game_ptr->player.max_mana), "", 1, 0);
+    side(9, format_string(" DEF %d%% ", game_ptr->player.armor), "", 1, 0);
+
+    side(10, sector_line_left, "", 0, 0);
+
+    // enemy sector
+    side(3, "", format_string("< %s > ", game_ptr->enemy.name), 0, 1);
+
+    side(6, "", format_string("HP %d/%d             ", game_ptr->enemy.hp, game_ptr->enemy.max_hp), 0, 1);
+    side(6, "", bar_string("", game_ptr->enemy.hp, game_ptr->enemy.max_hp), 0, 1);
+
+    side(7, "", format_string("DEF %d%% ", game_ptr->enemy.armor), 0, 1);
+    side(8, "", format_string("EXP %d ", game_ptr->enemy.exp_reward), 0, 1);
+
+    side(9, "", sector_line_right, 0, 0);
+
+    // middle sector
+    middle(3, format_string("Stage: %d", game_ptr->stage), 1);
+    middle(4, format_string("Difficulty: %f", game_ptr->diff), 1);
+    middle(5, format_string("Boss in %d!", enemy_per_stage - game_ptr->enemy_index + 1), 1);
+}   
 
 // WRAPPERS -----------------------------------------------------------------------------------------------------------
 
@@ -136,35 +178,133 @@ void msg_wrapper(draw_msg func, char* msg, const int is_dynamic, Game* game_ptr)
 
 void main_menu_draw(const int* x) {
     middle(3, "Journey of the Wizard", 0);
-    middle(HEIGHT - 10, "+-----------+", 0);
-    middle(HEIGHT - 9,"| by:Profit |", 0);
-    line(HEIGHT - 8);
-    (*x % 3 == 0) ? side(HEIGHT - 6, " > START GAME", "", 0, 0) : side(HEIGHT - 6, "   START GAME", "", 0, 0);
-    (*x % 3 == 1) ? side(HEIGHT - 5, " > LOAD GAME", "", 0, 0) : side(HEIGHT - 5, "   LOAD GAME", "", 0, 0);
-    (*x % 3 == 2) ? side(HEIGHT - 4, " > QUIT", "", 0, 0) : side(HEIGHT - 4, "   QUIT", "", 0, 0);
+    middle(HEIGHT - 14, "+-----------+", 0);
+    middle(HEIGHT - 13,"| by:Profit |", 0);
+    line(HEIGHT - 12);
+    switch (*x % 3) {
+        case 0:
+            side(HEIGHT - 10, "_________________________", "", 0, 0);
+            side(HEIGHT - 9, "             START NEW  /", "", 0, 0);
+            side(HEIGHT - 8, "_______________________/", "", 0, 0);
+            side(HEIGHT - 7, "       LOAD SAVE  /", "", 0, 0);
+            side(HEIGHT - 6, "_________________/", "", 0, 0);
+            side(HEIGHT - 5, "          QUIT  /", "", 0, 0);
+            side(HEIGHT - 4, "_______________/", "", 0, 0);
+            break;
+        case 1:
+            side(HEIGHT - 10, "_____________________", "", 0, 0);
+            side(HEIGHT - 9, "         START NEW  /", "", 0, 0);
+            side(HEIGHT - 8, "___________________/___", "", 0, 0);
+            side(HEIGHT - 7, "           LOAD SAVE  /", "", 0, 0);
+            side(HEIGHT - 6, "_____________________/", "", 0, 0);
+            side(HEIGHT - 5, "          QUIT  /", "", 0, 0);
+            side(HEIGHT - 4, "_______________/", "", 0, 0);
+            break;
+        case 2:
+            side(HEIGHT - 10, "_____________________", "", 0, 0);
+            side(HEIGHT - 9, "         START NEW  /", "", 0, 0);
+            side(HEIGHT - 8, "___________________/", "", 0, 0);
+            side(HEIGHT - 7, "       LOAD SAVE  /", "", 0, 0);
+            side(HEIGHT - 6, "_________________/___", "", 0, 0);
+            side(HEIGHT - 5, "              QUIT  /", "", 0, 0);
+            side(HEIGHT - 4, "___________________/", "", 0, 0);
+            break;
+    }
 }
 
 void quit_menu_draw(const int* x) {
     middle(3, "Are you sure?", 0);
-    line(HEIGHT - 8);
-    (*x % 2 == 0) ? side(HEIGHT - 5, " > YES", "", 0, 0) : side(HEIGHT - 5, "   YES", "", 0, 0);
-    (*x % 2 == 1) ? side(HEIGHT - 4, " > NO", "", 0, 0) : side(HEIGHT - 4, "   NO", "", 0, 0);
+    line(HEIGHT - 12);
+    switch (*x % 2) {
+        case 0:
+            side(HEIGHT - 9, "_________________________", "", 0, 0);
+            side(HEIGHT - 8, "                   YES  /", "", 0, 0);
+            side(HEIGHT - 7, "_______________________/", "", 0, 0);
+            side(HEIGHT - 6, "              NO  /", "", 0, 0);
+            side(HEIGHT - 5, "_________________/", "", 0, 0);
+            break;
+        case 1:
+            side(HEIGHT - 9, "_____________________", "", 0, 0);
+            side(HEIGHT - 8, "               YES  /", "", 0, 0);
+            side(HEIGHT - 7, "___________________/___", "", 0, 0);
+            side(HEIGHT - 6, "                  NO  /", "", 0, 0);
+            side(HEIGHT - 5, "_____________________/", "", 0, 0);
+            break;
+    }
 }
 
 void diff_menu_draw(const int* x) {
     middle(3, "Select a difficulty!", 0);
-    line(HEIGHT - 8);
-    (*x % 3 == 0) ? side(HEIGHT - 6, " > EASY", "", 0, 0) : side(HEIGHT - 6, "   EASY", "", 0, 0);
-    (*x % 3 == 1) ? side(HEIGHT - 5, " > NORMAL", "", 0, 0) : side(HEIGHT - 5, "   NORMAL", "", 0, 0);
-    (*x % 3 == 2) ? side(HEIGHT - 4, " > HARD", "", 0, 0) : side(HEIGHT - 4, "   HARD", "", 0, 0);
+    line(HEIGHT - 12);
+    switch (*x % 3) {
+        case 0:
+            side(HEIGHT - 10, "_________________________", "", 0, 0);
+            side(HEIGHT - 9, "                  EASY  /", "", 0, 0);
+            side(HEIGHT - 8, "_______________________/", "", 0, 0);
+            side(HEIGHT - 7, "          NORMAL  /", "", 0, 0);
+            side(HEIGHT - 6, "_________________/", "", 0, 0);
+            side(HEIGHT - 5, "          HARD  /", "", 0, 0);
+            side(HEIGHT - 4, "_______________/", "", 0, 0);
+            break;
+        case 1:
+            side(HEIGHT - 10, "_____________________", "", 0, 0);
+            side(HEIGHT - 9, "              EASY  /", "", 0, 0);
+            side(HEIGHT - 8, "___________________/___", "", 0, 0);
+            side(HEIGHT - 7, "              NORMAL  /", "", 0, 0);
+            side(HEIGHT - 6, "_____________________/", "", 0, 0);
+            side(HEIGHT - 5, "          HARD  /", "", 0, 0);
+            side(HEIGHT - 4, "_______________/", "", 0, 0);
+            break;
+        case 2:
+            side(HEIGHT - 10, "_____________________", "", 0, 0);
+            side(HEIGHT - 9, "              EASY  /", "", 0, 0);
+            side(HEIGHT - 8, "___________________/", "", 0, 0);
+            side(HEIGHT - 7, "          NORMAL  /", "", 0, 0);
+            side(HEIGHT - 6, "_________________/___", "", 0, 0);
+            side(HEIGHT - 5, "              HARD  /", "", 0, 0);
+            side(HEIGHT - 4, "___________________/", "", 0, 0);
+            break;
+    }
 }
 
 void pause_menu_draw(const int* x) {
     middle(3, "Game is Paused", 0);
-    line(HEIGHT - 8);
-    (*x % 3 == 0) ? side(HEIGHT - 6, " > RESUME", "", 0, 0) : side(HEIGHT - 6, "   RESUME", "", 0, 0);
-    (*x % 3 == 1) ? side(HEIGHT - 5, " > SAVE", "", 0, 0) : side(HEIGHT - 5, "   SAVE", "", 0, 0);
-    (*x % 3 == 2) ? side(HEIGHT - 4, " > MAIN MENU", "", 0, 0) : side(HEIGHT - 4, "   MAIN MENU", "", 0, 0);
+    line(HEIGHT - 12);
+    switch (*x % 3) {
+        case 0:
+            side(HEIGHT - 10, "_________________________", "", 0, 0);
+            side(HEIGHT - 9, "                RESUME  /", "", 0, 0);
+            side(HEIGHT - 8, "_______________________/", "", 0, 0);
+            side(HEIGHT - 7, "            SAVE  /", "", 0, 0);
+            side(HEIGHT - 6, "_________________/", "", 0, 0);
+            side(HEIGHT - 5, "     MAIN MENU  /", "", 0, 0);
+            side(HEIGHT - 4, "_______________/", "", 0, 0);
+            break;
+        case 1:
+            side(HEIGHT - 10, "_____________________", "", 0, 0);
+            side(HEIGHT - 9, "            RESUME  /", "", 0, 0);
+            side(HEIGHT - 8, "___________________/___", "", 0, 0);
+            side(HEIGHT - 7, "                SAVE  /", "", 0, 0);
+            side(HEIGHT - 6, "_____________________/", "", 0, 0);
+            side(HEIGHT - 5, "     MAIN MENU  /", "", 0, 0);
+            side(HEIGHT - 4, "_______________/", "", 0, 0);
+            break;
+        case 2:
+            side(HEIGHT - 10, "_____________________", "", 0, 0);
+            side(HEIGHT - 9, "            RESUME  /", "", 0, 0);
+            side(HEIGHT - 8, "___________________/", "", 0, 0);
+            side(HEIGHT - 7, "            SAVE  /", "", 0, 0);
+            side(HEIGHT - 6, "_________________/___", "", 0, 0);
+            side(HEIGHT - 5, "         MAIN MENU  /", "", 0, 0);
+            side(HEIGHT - 4, "___________________/", "", 0, 0);
+            break;
+    }
+}
+
+void game_over_draw(const int* x) {
+    middle(3, "Game Over", 0);
+    line(HEIGHT - 12);
+    middle(HEIGHT - 8, "< Main menu >", 0);
 }
 
 void debug_draw(const int* x, Game* game_ptr) {
@@ -209,26 +349,58 @@ void debug_draw(const int* x, Game* game_ptr) {
 }
 
 void game_action_draw(const int* x, Game* game_ptr) {
-    line(HEIGHT - 10);
-    (*x % 5 == 0) ? side(HEIGHT - 8, " > ZAP", "", 0, 0) : side(HEIGHT - 8, "   ZAP", "", 0, 0);
-    (*x % 5 == 1) ? side(HEIGHT - 7, " > OVERCHARGE", "", 0, 0) : side(HEIGHT - 7, "   OVERCHARGE", "", 0, 0);
-    (*x % 5 == 2) ? side(HEIGHT - 6, " > METEOR SHOWER", "", 0, 0) : side(HEIGHT - 6, "   METEOR SHOWER", "", 0, 0);
-    (*x % 5 == 3) ? side(HEIGHT - 5, " > HEAL", "", 0, 0) : side(HEIGHT - 5, "   HEAL", "", 0, 0);
-    (*x % 5 == 4) ? side(HEIGHT - 4, " > REST", "", 0, 0) : side(HEIGHT - 4, "   REST", "", 0, 0);
+    line(HEIGHT - 9);
+    switch (*x % 5) { // action desc
+        case 0:
+            side(12, " Lightning Zap", "", 0, 0);
+            side(14, format_string(" - Dose %d damage", game_ptr->player.zap_dmg), "", 1, 0);
+            side(15, format_string(" - Has x%% chanche to stun the enemy"), "", 1, 0);
+            side(16, format_string(" - Costs %d mana", game_ptr->player.zap_cost), "", 1, 0);
+            side(18, " < Description >", "", 0, 0);
+            side(19, " 'When you touch the wrong wire...' ", "", 0, 0);
+            break;
+        case 1:
+            side(12, " Overcharged Wand", "", 0, 0);
+            side(14, format_string(" - Charges your want up by %d", game_ptr->player.charge_up), "", 1, 0);
+            side(15, format_string(" - Every charge gives an %d damage multipiler", charge_mult), "", 1, 0);
+            side(16, format_string(" - Your wand is currently charged up by %d", game_ptr->player.current_charge), "", 1, 0);
+            side(17, format_string(" - Costs %d mana", game_ptr->player.charge_cost), "", 1, 0);
+            break;
+        case 2:
+            side(12, " Meteor Shower", "", 0, 0);
+            side(14, format_string(" - Dose %d damage", game_ptr->player.meteor_dmg), "", 1, 0);
+            side(15, format_string(" - Sets the enemy on fire for %d turns", game_ptr->player.meteor_fire), "", 1, 0);
+            side(16, format_string(" - Costs %d mana", game_ptr->player.meteor_cost), "", 1, 0);
+            side(18, " < Description >", "", 0, 0);
+            side(19, " 'Big rock goes brrr' ", "", 0, 0);
+            break;
+        case 3:
+            side(12, " Heal Potion", "", 0, 0);
+            side(14, format_string(" - Restores %d health", heal_amount), "", 1, 0);
+            side(15, format_string(" - You currently have %d bottles", game_ptr->player.heal_potion), "", 1, 0);
+            side(17, " < Description >", "", 0, 0);
+            side(18, " 'Its not white monster i swear' ", "", 0, 0);
+            break;
+        case 4:
+            side(12, " Rest", "", 0, 0);
+            side(14, format_string(" - Restores %d mana", rest_amount), "", 1, 0);
+            side(15, " - Unlimited use", "", 0, 0);
+            side(17, " < Description >", "", 0, 0);
+            side(18, " 'Quick power nap' ", "", 0, 0);
+            break;
+    }
+
+    (*x % 5 == 0) ? side(HEIGHT - 7, " > [ ZAP ]", "", 0, 0) : side(HEIGHT - 7, "   [ ZAP ]", "", 0, 0);
+    (*x % 5 == 1) ? side(HEIGHT - 6, " > [ CHARGE ]", "", 0, 0) : side(HEIGHT - 6, "   [ CHARGE ]", "", 0, 0);
+    (*x % 5 == 2) ? side(HEIGHT - 5, " > [ METEOR ]", "", 0, 0) : side(HEIGHT - 5, "   [ METEOR ]", "", 0, 0);
+    (*x % 5 == 3) ? side(HEIGHT - 4, " > [ HEAL ]", "", 0, 0) : side(HEIGHT - 4, "   [ HEAL ]", "", 0, 0);
+    (*x % 5 == 4) ? side(HEIGHT - 3, " > [ REST ]", "", 0, 0) : side(HEIGHT - 3, "   [ REST ]", "", 0, 0);
 }
 
 void game_msg_draw(char* msg, const int is_dynamic, Game* game_ptr) {
-    if (is_dynamic) middle(12, msg, 1);
-    else middle(12, msg, 0);
-    line(HEIGHT - 10);
-    middle(HEIGHT - 8, "< Press Space >", 0);
-}
-
-void game_over_draw(const int* x, Game* game_ptr) {
-    middle(3, "Game Over", 0);
-    middle(5, format_string("stage: %d", game_ptr->stage), 1);
-    line(HEIGHT - 10);
-    middle(HEIGHT - 8, "< Main menu >", 0);
+    line(HEIGHT - 9);
+    middle(HEIGHT - 10, msg, is_dynamic);
+    middle(HEIGHT - 7, "< Press Space >", 0);
 }
 
 // MENUS --------------------------------------------------------------------------------------------------------------
@@ -301,6 +473,16 @@ int pause_menu() {
     }
 }
 
+void game_over(Game* game_ptr) {
+    char key;
+    menu_wrapper(game_over_draw, NULL);
+    while (true) {
+        key = getch();
+        if (key == ' ') break;
+    }
+    
+}
+
 void debug(Game* game_ptr) {
     int x = 0;
     int option_count = 3;
@@ -343,15 +525,4 @@ void game_msg(char* msg, int is_dynamic, Game* game_ptr) {
         key = getch();
         if (key == ' ') break;
     }
-    
-}
-
-void game_over(Game* game_ptr) {
-    char key;
-    game_wrapper(game_over_draw, NULL, game_ptr);
-    while (true) {
-        key = getch();
-        if (key == ' ') break;
-    }
-    
 }
