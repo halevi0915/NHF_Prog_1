@@ -10,6 +10,7 @@ const float enemy_heal_threshold = 0.3;
 const int enemy_per_stage = 4;
 const int stage_count = 3;
 const int exp_scale = 10;
+const float diff_scale = 1.2;
 
 const float easy_diff_mult = 0.8;
 const float normal_diff_mult = 1;
@@ -23,11 +24,15 @@ const Enemy forest_enemies[] = {
 {
     .name = "Slime",
     .dmg = 10,
-    .max_hp = 1000,
-    .hp = 1000,
+    .max_hp = 100,
+    .hp = 100,
     .armor = 10,
+    .crit_ch = 20,
+    .crit_dmg = 1.6,
+    .miss_ch = 20,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Wolf",
@@ -35,8 +40,12 @@ const Enemy forest_enemies[] = {
     .max_hp = 10,
     .hp = 10,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Sapling",
@@ -44,8 +53,12 @@ const Enemy forest_enemies[] = {
     .max_hp = 10,
     .hp = 10,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Forest Elf",
@@ -53,8 +66,12 @@ const Enemy forest_enemies[] = {
     .max_hp = 10,
     .hp = 10,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 };
 
@@ -66,8 +83,12 @@ const Enemy cave_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Skeleton",
@@ -75,8 +96,12 @@ const Enemy cave_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0 
+    .fire = 0,
+    .stun = 0, 
 },
 {
     .name = "Spider",
@@ -84,8 +109,12 @@ const Enemy cave_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Goblin",
@@ -93,8 +122,12 @@ const Enemy cave_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 };
 
@@ -106,8 +139,12 @@ const Enemy castle_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Necromancer",
@@ -115,8 +152,12 @@ const Enemy castle_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Cultist",
@@ -124,8 +165,12 @@ const Enemy castle_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 {
     .name = "Sorcerer",
@@ -133,8 +178,12 @@ const Enemy castle_enemies[] = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 },
 };
 
@@ -145,8 +194,12 @@ const Enemy forest_boss = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 };
 
 const Enemy cave_boss = {
@@ -155,8 +208,12 @@ const Enemy cave_boss = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 };
 
 const Enemy castle_boss = {
@@ -165,119 +222,123 @@ const Enemy castle_boss = {
     .max_hp = 100,
     .hp = 100,
     .armor = 10,
+    .crit_ch = 10,
+    .crit_dmg = 1.6,
+    .miss_ch = 10,
     .exp_reward = 10,
-    .fire = 0
+    .fire = 0,
+    .stun = 0,
 };
 
 // VOICE LINES --------------------------------------------------------------------------------------------------------
 
-const char* zap_msg[] = {
-    "Enemy jolted! (%d dmg)",
-    "Shocked! (%d dmg)",
-    "A bolt strikes! (%d dmg)",
-    "Struck by lightning! (%d dmg)",
-    "Electrified! (%d dmg)",
-    "Hit with a spark! (%d dmg)",
-    "Touched by thunder! (%d dmg)",
-    "Current hits the target! (%d dmg)",
-    "Lightning arcs! (%d dmg)",
-    "A jolt of energy! (%d dmg)",
-    "Hit with electric force! (%d dmg)",
-    "Shocker! (%d dmg)",
-    "Zap attack lands! (%d dmg)",
-    "Enemy feels the spark! (%d dmg)",
-    "Bolted! (%d dmg)",
-    "Hit by a spark blast! (%d dmg)",
-    "Crackling energy! (%d dmg)",
-    "Struck with voltage! (%d dmg)",
-};
+// const char* zap_msg[] = {
+//     "Enemy jolted! (%d dmg)",
+//     "Shocked! (%d dmg)",
+//     "A bolt strikes! (%d dmg)",
+//     "Struck by lightning! (%d dmg)",
+//     "Electrified! (%d dmg)",
+//     "Hit with a spark! (%d dmg)",
+//     "Touched by thunder! (%d dmg)",
+//     "Current hits the target! (%d dmg)",
+//     "Lightning arcs! (%d dmg)",
+//     "A jolt of energy! (%d dmg)",
+//     "Hit with electric force! (%d dmg)",
+//     "Shocker! (%d dmg)",
+//     "Zap attack lands! (%d dmg)",
+//     "Enemy feels the spark! (%d dmg)",
+//     "Bolted! (%d dmg)",
+//     "Hit by a spark blast! (%d dmg)",
+//     "Crackling energy! (%d dmg)",
+//     "Struck with voltage! (%d dmg)",
+// };
 
-const char* charge_msg[] = {
-    "Wand is charging! (%dx)",
-    "Energy gathers! (%dx)",
-    "Power surges through the wand! (%dx)",
-    "Gathering magical force! (%dx)",
-    "The wand hums with energy! (%dx)",
-    "Spell power increasing! (%dx)",
-    "Charging complete! (%dx)",
-    "Arcane energy flows! (%dx)",
-    "Magic intensifies! (%dx)",
-    "Power builds! (%dx)",
-    "Wand glows brightly! (%dx)",
-    "Energy is focused! (%dx)",
-    "The air crackles with power! (%dx)",
-    "A surge of magic! (%dx)",
-    "Force concentrates! (%dx)",
-    "Spell energy accumulating! (%dx)",
-    "Wand pulses with power! (%dx)",
-    "Charging spell! (%dx)",
-    "Energy locked and ready! (%dx)",
-    "Power at maximum! (%dx)"
-};
+// const char* charge_msg[] = {
+//     "Wand is charging! (%dx)",
+//     "Energy gathers! (%dx)",
+//     "Power surges through the wand! (%dx)",
+//     "Gathering magical force! (%dx)",
+//     "The wand hums with energy! (%dx)",
+//     "Spell power increasing! (%dx)",
+//     "Charging complete! (%dx)",
+//     "Arcane energy flows! (%dx)",
+//     "Magic intensifies! (%dx)",
+//     "Power builds! (%dx)",
+//     "Wand glows brightly! (%dx)",
+//     "Energy is focused! (%dx)",
+//     "The air crackles with power! (%dx)",
+//     "A surge of magic! (%dx)",
+//     "Force concentrates! (%dx)",
+//     "Spell energy accumulating! (%dx)",
+//     "Wand pulses with power! (%dx)",
+//     "Charging spell! (%dx)",
+//     "Energy locked and ready! (%dx)",
+//     "Power at maximum! (%dx)"
+// };
 
-const char* meteor_msg[] = {
-    "Meteor lands! (%d dmg)",
-    "Fiery impact! (%d dmg)",
-    "Burned by a falling star! (%d dmg)",
-    "The sky crashes down! (%d dmg)",
-    "Meteor hits! (%d dmg)",
-    "Crashing inferno! (%d dmg)",
-    "Enemy engulfed in fire! (%d dmg)",
-    "Impact from above! (%d dmg)",
-    "Fallen star strikes! (%d dmg)",
-    "Meteor smash! (%d dmg)",
-    "Inferno rains down! (%d dmg)",
-    "Hit by a fireball! (%d dmg)",
-    "Flame impact! (%d dmg)",
-    "Burning meteorfall! (%d dmg)",
-    "Sky fire! (%d dmg)",
-    "Explosive impact! (%d dmg)"
-};
+// const char* meteor_msg[] = {
+//     "Meteor lands! (%d dmg)",
+//     "Fiery impact! (%d dmg)",
+//     "Burned by a falling star! (%d dmg)",
+//     "The sky crashes down! (%d dmg)",
+//     "Meteor hits! (%d dmg)",
+//     "Crashing inferno! (%d dmg)",
+//     "Enemy engulfed in fire! (%d dmg)",
+//     "Impact from above! (%d dmg)",
+//     "Fallen star strikes! (%d dmg)",
+//     "Meteor smash! (%d dmg)",
+//     "Inferno rains down! (%d dmg)",
+//     "Hit by a fireball! (%d dmg)",
+//     "Flame impact! (%d dmg)",
+//     "Burning meteorfall! (%d dmg)",
+//     "Sky fire! (%d dmg)",
+//     "Explosive impact! (%d dmg)"
+// };
 
-const char* heal_msg[] = {
-    "Health restored! (+%d hp)",
-    "Feeling better! (+%d hp)",
-    "Wounds begin to close! (+%d hp)",
-    "Healing magic takes effect! (+%d hp)",
-    "Vitality returns! (+%d hp)",
-    "The potion works! (+%d hp)",
-    "Life flows anew! (+%d hp)",
-    "Recovered some strength! (+%d hp)",
-    "Energy renewed! (+%d hp)",
-    "Health replenished! (+%d hp)",
-    "The potion soothes your body! (+%d hp)",
-    "Feeling revitalized! (+%d hp)",
-    "Restored to full health! (+%d hp)",
-    "Life force surges! (+%d hp)",
-    "The healing takes hold! (+%d hp)",
-    "Wounds knit together! (+%d hp)",
-    "Strength returns! (+%d hp)",
-    "You feel rejuvenated! (+%d hp)",
-    "Potion restores vitality! (+%d hp)",
-    "Vitality courses through you! (+%d hp)",
-};
+// const char* heal_msg[] = {
+//     "Health restored! (+%d hp)",
+//     "Feeling better! (+%d hp)",
+//     "Wounds begin to close! (+%d hp)",
+//     "Healing magic takes effect! (+%d hp)",
+//     "Vitality returns! (+%d hp)",
+//     "The potion works! (+%d hp)",
+//     "Life flows anew! (+%d hp)",
+//     "Recovered some strength! (+%d hp)",
+//     "Energy renewed! (+%d hp)",
+//     "Health replenished! (+%d hp)",
+//     "The potion soothes your body! (+%d hp)",
+//     "Feeling revitalized! (+%d hp)",
+//     "Restored to full health! (+%d hp)",
+//     "Life force surges! (+%d hp)",
+//     "The healing takes hold! (+%d hp)",
+//     "Wounds knit together! (+%d hp)",
+//     "Strength returns! (+%d hp)",
+//     "You feel rejuvenated! (+%d hp)",
+//     "Potion restores vitality! (+%d hp)",
+//     "Vitality courses through you! (+%d hp)",
+// };
 
-const char* rest_msg[] = {
-    "Mana restored! (+%d mana)",
-    "Energy returns! (+%d mana)",
-    "Magic flowing again! (+%d mana)",
-    "The mind clears, power returns! (+%d mana)",
-    "Magical reserves replenished! (+%d mana)",
-    "Feeling magically recharged! (+%d mana)",
-    "Arcane energy restored! (+%d mana)",
-    "Power wells up within! (+%d mana)",
-    "Mana flows through you! (+%d mana)",
-    "Energy renewed! (+%d mana)",
-    "Your focus strengthens! (+%d mana)",
-    "Spell power returning! (+%d mana)",
-    "Resting restores your magic! (+%d mana)",
-    "Magical energy courses through you! (+%d mana)",
-    "The mind and mana recover! (+%d mana)",
-    "Recharged and ready! (+%d mana)",
-    "Your magical essence returns! (+%d mana)",
-    "Mana bubbling back! (+%d mana)",
-    "Magic returns to full strength! (+%d mana)",
-};
+// const char* rest_msg[] = {
+//     "Mana restored! (+%d mana)",
+//     "Energy returns! (+%d mana)",
+//     "Magic flowing again! (+%d mana)",
+//     "The mind clears, power returns! (+%d mana)",
+//     "Magical reserves replenished! (+%d mana)",
+//     "Feeling magically recharged! (+%d mana)",
+//     "Arcane energy restored! (+%d mana)",
+//     "Power wells up within! (+%d mana)",
+//     "Mana flows through you! (+%d mana)",
+//     "Energy renewed! (+%d mana)",
+//     "Your focus strengthens! (+%d mana)",
+//     "Spell power returning! (+%d mana)",
+//     "Resting restores your magic! (+%d mana)",
+//     "Magical energy courses through you! (+%d mana)",
+//     "The mind and mana recover! (+%d mana)",
+//     "Recharged and ready! (+%d mana)",
+//     "Your magical essence returns! (+%d mana)",
+//     "Mana bubbling back! (+%d mana)",
+//     "Magic returns to full strength! (+%d mana)",
+// };
 
 // const char* burn_msg[] = {
 //     "Enemy scorched! (%d dmg)",

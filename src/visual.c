@@ -89,7 +89,7 @@ void draw_base() {
 
 // megrajzolja az alap kinézetet - statok
 void draw_header(Game* game_ptr) {
-    char sector_separator_left[WIDTH / 3 + 1 - 4]; // -4 adjusting
+    char sector_separator_left[WIDTH / 3 + 1 - 4]; // -4 adjusting / kerekities
     char sector_separator_right[WIDTH / 3 + 1 - 4];
     char sector_line_left[WIDTH / 3 + 1 - 4];
     char sector_line_right[WIDTH / 3 + 1 - 4];
@@ -126,9 +126,14 @@ void draw_header(Game* game_ptr) {
     side(9, format_string(" DEF %d%% ", game_ptr->player.armor), "", 1, 0);
 
     side(10, sector_line_left, "", 0, 0);
+    side(21, sector_line_left, "", 0, 0);
+    side(23, " < Inventory >", "", 0, 0);
 
     // enemy sector
-    side(3, "", format_string("< %s > ", game_ptr->enemy.name), 0, 1);
+    if (game_ptr->enemy.hp == 0) side(3, "", format_string("Dead - < %s > ", game_ptr->enemy.name), 0, 1);
+    else if (game_ptr->enemy.stun == 1) side(3, "", format_string("Stunned - < %s > ", game_ptr->enemy.name), 0, 1);
+    else if (game_ptr->enemy.fire > 0) side(3, "", format_string("Burning - < %s > ", game_ptr->enemy.name), 0, 1);
+    else side(3, "", format_string("< %s > ", game_ptr->enemy.name), 0, 1);
 
     side(6, "", format_string("HP %d/%d             ", game_ptr->enemy.hp, game_ptr->enemy.max_hp), 0, 1);
     side(6, "", bar_string("", game_ptr->enemy.hp, game_ptr->enemy.max_hp), 0, 1);
@@ -140,7 +145,7 @@ void draw_header(Game* game_ptr) {
 
     // middle sector
     middle(3, format_string("Stage: %d", game_ptr->stage), 1);
-    middle(4, format_string("Difficulty: %f", game_ptr->diff), 1);
+    middle(4, format_string("Difficulty: %.2f", game_ptr->diff), 1);
     middle(5, format_string("Boss in %d!", enemy_per_stage - game_ptr->enemy_index + 1), 1);
 }   
 
@@ -307,46 +312,46 @@ void game_over_draw(const int* x) {
     middle(HEIGHT - 8, "< Main menu >", 0);
 }
 
-void debug_draw(const int* x, Game* game_ptr) {
-    switch (*x % 3) {
-        case 0:
-            middle(3, format_string("turn: %d", game_ptr->turn), 1);
-            middle(4, format_string("stage: %d", game_ptr->stage), 1);
-            middle(5, format_string("diff: %f", game_ptr->diff), 1);
-            break;
-        case 1:
-            middle(3, format_string("lvl: %d", game_ptr->player.lvl), 1);
-            middle(4, format_string("exp: %d", game_ptr->player.exp), 1);
-            middle(5, format_string("next_level_exp: %d", game_ptr->player.next_level_exp), 1);
-            middle(6, format_string("max_hp: %d", game_ptr->player.max_hp), 1);
-            middle(7, format_string("hp: %d", game_ptr->player.hp), 1);
-            middle(8, format_string("max_mana: %d", game_ptr->player.max_mana), 1);
-            middle(9, format_string("mana: %d", game_ptr->player.mana), 1);
-            middle(10, format_string("armor: %d", game_ptr->player.armor), 1);
-            middle(11, format_string("zap_cost: %d", game_ptr->player.zap_cost), 1);
-            middle(12, format_string("zap_dmg: %d", game_ptr->player.zap_dmg), 1);
-            middle(13, format_string("charge_cost: %d", game_ptr->player.charge_cost), 1);
-            middle(14, format_string("charge_up: %d", game_ptr->player.charge_up), 1);
-            middle(15, format_string("meteor_cost: %d", game_ptr->player.meteor_cost), 1);
-            middle(16, format_string("meteor_dmg: %d", game_ptr->player.meteor_dmg), 1);
-            middle(17, format_string("meteor_fire: %d", game_ptr->player.meteor_fire), 1);
-            middle(18, format_string("heal_potion: %d", game_ptr->player.heal_potion), 1);
-            break;
-        case 2:
-            middle(3, format_string("name: %s", game_ptr->enemy.name), 1);
-            middle(4, format_string("max_hp: %d", game_ptr->enemy.dmg), 1);
-            middle(5, format_string("max_hp: %d", game_ptr->enemy.max_hp), 1);
-            middle(6, format_string("hp: %d", game_ptr->enemy.hp), 1);
-            middle(7, format_string("armor: %d", game_ptr->enemy.armor), 1);
-            middle(8, format_string("exp_reward: %d", game_ptr->enemy.exp_reward), 1);
-            middle(9, format_string("fire: %d", game_ptr->enemy.fire), 1);
-            break;
-    }
-    line(HEIGHT - 8);
-    (*x % 3 == 0) ? side(HEIGHT - 6, " > GAME", "", 0, 0) : side(HEIGHT - 6, "   GAME", "", 0, 0);
-    (*x % 3 == 1) ? side(HEIGHT - 5, " > PLAYER", "", 0, 0) : side(HEIGHT - 5, "   PLAYER", "", 0, 0);
-    (*x % 3 == 2) ? side(HEIGHT - 4, " > ENEMY", "", 0, 0) : side(HEIGHT - 4, "   ENEMY", "", 0, 0);
-}
+// void debug_draw(const int* x, Game* game_ptr) {
+//     switch (*x % 3) {
+//         case 0:
+//             middle(3, format_string("turn: %d", game_ptr->turn), 1);
+//             middle(4, format_string("stage: %d", game_ptr->stage), 1);
+//             middle(5, format_string("diff: %f", game_ptr->diff), 1);
+//             break;
+//         case 1:
+//             middle(3, format_string("lvl: %d", game_ptr->player.lvl), 1);
+//             middle(4, format_string("exp: %d", game_ptr->player.exp), 1);
+//             middle(5, format_string("next_level_exp: %d", game_ptr->player.next_level_exp), 1);
+//             middle(6, format_string("max_hp: %d", game_ptr->player.max_hp), 1);
+//             middle(7, format_string("hp: %d", game_ptr->player.hp), 1);
+//             middle(8, format_string("max_mana: %d", game_ptr->player.max_mana), 1);
+//             middle(9, format_string("mana: %d", game_ptr->player.mana), 1);
+//             middle(10, format_string("armor: %d", game_ptr->player.armor), 1);
+//             middle(11, format_string("zap_cost: %d", game_ptr->player.zap_cost), 1);
+//             middle(12, format_string("zap_dmg: %d", game_ptr->player.zap_dmg), 1);
+//             middle(13, format_string("charge_cost: %d", game_ptr->player.charge_cost), 1);
+//             middle(14, format_string("charge_up: %d", game_ptr->player.charge_up), 1);
+//             middle(15, format_string("meteor_cost: %d", game_ptr->player.meteor_cost), 1);
+//             middle(16, format_string("meteor_dmg: %d", game_ptr->player.meteor_dmg), 1);
+//             middle(17, format_string("meteor_fire: %d", game_ptr->player.meteor_fire), 1);
+//             middle(18, format_string("heal_potion: %d", game_ptr->player.heal_potion), 1);
+//             break;
+//         case 2:
+//             middle(3, format_string("name: %s", game_ptr->enemy.name), 1);
+//             middle(4, format_string("max_hp: %d", game_ptr->enemy.dmg), 1);
+//             middle(5, format_string("max_hp: %d", game_ptr->enemy.max_hp), 1);
+//             middle(6, format_string("hp: %d", game_ptr->enemy.hp), 1);
+//             middle(7, format_string("armor: %d", game_ptr->enemy.armor), 1);
+//             middle(8, format_string("exp_reward: %d", game_ptr->enemy.exp_reward), 1);
+//             middle(9, format_string("fire: %d", game_ptr->enemy.fire), 1);
+//             break;
+//     }
+//     line(HEIGHT - 8);
+//     (*x % 3 == 0) ? side(HEIGHT - 6, " > GAME", "", 0, 0) : side(HEIGHT - 6, "   GAME", "", 0, 0);
+//     (*x % 3 == 1) ? side(HEIGHT - 5, " > PLAYER", "", 0, 0) : side(HEIGHT - 5, "   PLAYER", "", 0, 0);
+//     (*x % 3 == 2) ? side(HEIGHT - 4, " > ENEMY", "", 0, 0) : side(HEIGHT - 4, "   ENEMY", "", 0, 0);
+// }
 
 void game_action_draw(const int* x, Game* game_ptr) {
     line(HEIGHT - 9);
@@ -356,8 +361,8 @@ void game_action_draw(const int* x, Game* game_ptr) {
             side(14, format_string(" - Dose %d damage", game_ptr->player.zap_dmg), "", 1, 0);
             side(15, format_string(" - Has x%% chanche to stun the enemy"), "", 1, 0);
             side(16, format_string(" - Costs %d mana", game_ptr->player.zap_cost), "", 1, 0);
-            side(18, " < Description >", "", 0, 0);
-            side(19, " 'When you touch the wrong wire...' ", "", 0, 0);
+            side(19, " < Description >", "", 0, 0);
+            side(20, " 'When you touch the wrong wire...' ", "", 0, 0);
             break;
         case 1:
             side(12, " Overcharged Wand", "", 0, 0);
@@ -365,28 +370,30 @@ void game_action_draw(const int* x, Game* game_ptr) {
             side(15, format_string(" - Every charge gives an %d damage multipiler", charge_mult), "", 1, 0);
             side(16, format_string(" - Your wand is currently charged up by %d", game_ptr->player.current_charge), "", 1, 0);
             side(17, format_string(" - Costs %d mana", game_ptr->player.charge_cost), "", 1, 0);
+            side(19, " < Description >", "", 0, 0);
+            side(20, " 'Overclocking the wand!' ", "", 0, 0);
             break;
         case 2:
             side(12, " Meteor Shower", "", 0, 0);
             side(14, format_string(" - Dose %d damage", game_ptr->player.meteor_dmg), "", 1, 0);
             side(15, format_string(" - Sets the enemy on fire for %d turns", game_ptr->player.meteor_fire), "", 1, 0);
             side(16, format_string(" - Costs %d mana", game_ptr->player.meteor_cost), "", 1, 0);
-            side(18, " < Description >", "", 0, 0);
-            side(19, " 'Big rock goes brrr' ", "", 0, 0);
+            side(19, " < Description >", "", 0, 0);
+            side(20, " 'Big rock goes brrr' ", "", 0, 0);
             break;
         case 3:
             side(12, " Heal Potion", "", 0, 0);
             side(14, format_string(" - Restores %d health", heal_amount), "", 1, 0);
             side(15, format_string(" - You currently have %d bottles", game_ptr->player.heal_potion), "", 1, 0);
-            side(17, " < Description >", "", 0, 0);
-            side(18, " 'Its not white monster i swear' ", "", 0, 0);
+            side(19, " < Description >", "", 0, 0);
+            side(20, " 'Its not white monster i swear' ", "", 0, 0);
             break;
         case 4:
             side(12, " Rest", "", 0, 0);
             side(14, format_string(" - Restores %d mana", rest_amount), "", 1, 0);
             side(15, " - Unlimited use", "", 0, 0);
-            side(17, " < Description >", "", 0, 0);
-            side(18, " 'Quick power nap' ", "", 0, 0);
+            side(19, " < Description >", "", 0, 0);
+            side(20, " 'Quick power nap' ", "", 0, 0);
             break;
     }
 
@@ -413,8 +420,8 @@ int main_menu() {
         menu_wrapper(main_menu_draw, &x);
         key = getch();
         switch (key) {
-            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
-            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
             case '\n': return x;
         }
     }
@@ -429,8 +436,8 @@ int quit_menu() {
         menu_wrapper(quit_menu_draw, &x);
         key = getch();
         switch (key) {
-            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
-            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
             case '\n': return x;
         }
     }
@@ -444,8 +451,8 @@ float diff_menu() {
         menu_wrapper(diff_menu_draw, &x);
         key = getch();
         switch (key) {
-            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
-            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
             case '\n':
                 switch (x) {
                     case 0: return easy_diff_mult;
@@ -464,8 +471,8 @@ int pause_menu() {
         menu_wrapper(pause_menu_draw, &x);
         key = getch();
         switch (key) {
-            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
-            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
             case '\n': return x;
             case 27: //esc
                 return 0; // resume
@@ -483,22 +490,21 @@ void game_over(Game* game_ptr) {
     
 }
 
-void debug(Game* game_ptr) {
-    int x = 0;
-    int option_count = 3;
-    char key;
-    int running = true;
-    while (running) {
-        game_wrapper(debug_draw, &x, game_ptr);
-        key = getch();
-        switch (key) {
-            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
-            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
-            case '\n': running = false; break;
-        }
-    }
-    
-}
+// void debug(Game* game_ptr) {
+//     int x = 0;
+//     int option_count = 3;
+//     char key;
+//     int running = true;
+//     while (running) {
+//         game_wrapper(debug_draw, &x, game_ptr);
+//         key = getch();
+//         switch (key) {
+//             case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+//             case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
+//             case '\n': running = false; break;
+//         }
+//     }
+// }
 
 int game_action(Game* game_ptr) {
     int x = 0;
@@ -508,8 +514,8 @@ int game_action(Game* game_ptr) {
         game_wrapper(game_action_draw, &x, game_ptr);
         key = getch();
         switch (key) {
-            case 'w': x = (x > 0) ? (x - 1) : option_count - 1; break;
-            case 's': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
             case '\n': return x;
             case 27: //esc
                 return -1; // for pause menu

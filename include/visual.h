@@ -13,7 +13,7 @@ int quit_menu();
 float diff_menu();
 int pause_menu();
 
-void debug(Game* game);
+// void debug(Game* game);
 int game_action(Game* game);
 void game_msg(char* msg, const int is_dynamic, Game* game);
 void game_over(Game* game_ptr);

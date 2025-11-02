@@ -1,20 +1,11 @@
-TODO:
+TODO ----------------------------------------------------------------------------------------------
 must do:
     visual:
     internal:
-        holnap analizis then
-        - miss ch, crit ch, crit dmg
-        - add to header
-        - zap stun - misses turn
-        - add status to header
-        - make items
-        - item choose menu / malloc
+        - player inventory - make items - item choose menu / malloc - dynamic inventory array - search func
         - save game sys
-        - balance enemies
+        - balance enemies - default player values are low (even 0) can scale with items
         - insane comments in code
-        - stage+ adds to diff directly
-        - caps lock immune - check for W and S too
-    
 
 optional:
     visual:
@@ -26,15 +17,24 @@ optional:
         - +status confuse - miss ch, poison - less dmg more stacks
         - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
 
-    
-DONE
-- random ability texts in global and just meteor_text[randint(x,y)] ai generated
+DONE ----------------------------------------------------------------------------------------------
+
+- enemy crit miss
+- armor fix
+- stage+ adds to diff directly
+- caps lock immune - check for W and S too
+- zap stun - misses turn
+- miss ch, crit ch, crit dmg
+- add status to header
 - use const in functions
 - stat bar - no numbers
 - in game spell description when hoevered
 - improve viuals in game - full overhaul but same tools
 
-CANCELLED
+CANCELLED -----------------------------------------------------------------------------------------
+
+- random ability texts in global and just meteor_text[randint(x,y)] ai generated only spells - cancelled cuz because
+- pause menu stats: pause menu dosent have access to game_ptr
 - colored text
 - text animation??? nope
 - menu for lores
@@ -42,9 +42,8 @@ CANCELLED
 - multiple characters: fire wizard, lightning wizard, earth wizard, ancient wizard
 - ancient wizard unlockable
 - use enums idk if good idea maybe later
-- pause menu stats
 
-AGENDA
+AGENDA --------------------------------------------------------------------------------------------
 
 - funcba akkor const ha sehol se valtozik
     nem lehet const msg, game_ptr
@@ -53,12 +52,9 @@ AGENDA
 - standard lib-eket ott import ahol kell
 - belso import adott
 - struct valahol él onnan csak pointert adsz tovabb
-- 
+- check for every divison if it needs (float) cast
 
-
-
-
-STURCTURE
+STURCTURE -----------------------------------------------------------------------------------------
 
 there are enemy constants in global - u copy it and use that
 functions take the pointers of the used enemy/player/game
@@ -75,7 +71,8 @@ turn:
 0 enemy
 1 player
 
-ASCII IMPORT
+ASCII IMPORT --------------------------------------------------------------------------------------
+
 - 2d array
 - file_handler.c
 - file_handler.h
@@ -84,3 +81,15 @@ ASCII IMPORT
 vagy nem mivel lehet mashova nem is kell ascii art
 ha keves kell akkor lehet hardcode-olni 
 - hátrány: nem lehet \-t hasznalni
+
+INVENTORY NOTES -----------------------------------------------------------------------------------
+- többfele item van
+- egy itembol tobb is lehet
+- player - inventory - item
+- inventory: size, data pointer, mallocal bovul
+- item: id, boost, boost_amount: random, min_boost, max_boost 
+- funcs: add item, load_save: scale_player, generate_item returns an item copy with random boost_amount (randint)
+- itemek random stattal szuletnek
+- inventory mindig kibovul
+- inventory visual and save sempont - save: dont need to save the player, saving the items and the lvl is enough
+- items can have contitions to spawn pl: stun upgrade spawns when zap_stun_ch is below 100% (cant go above 100% so getting a new upgrade is useless)

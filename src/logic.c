@@ -20,8 +20,12 @@ int min(const int a, const int b) {
 
 // returns a random int in the range including both ends
 int randint(const int start, const int end) {
-    srand(time(NULL));
     return (rand()%(end - start + 1)) + start;
+}
+
+// based on a given percentage, it returns ture or false
+int calc_chance(const int chance) {
+    return (randint(1,100) <= chance);
 }
 
 // return a formatted str with the values

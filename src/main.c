@@ -1,12 +1,14 @@
 #include <ncurses.h>
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 
 #include "game.h"
 #include "visual.h"
 
 int main() {
     init_screen();
-
+    srand(time(NULL));
     int program_running = 1;
     Game game;
 
