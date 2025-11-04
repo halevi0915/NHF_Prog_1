@@ -1,20 +1,21 @@
 #include "globals.h"
 
 // GLOBALS ------------------------------------------------------------------------------------------------------------
-const int heal_amount = 40;
 const int enemy_heal_amount = 20;
-const int rest_amount = 50;
 const int fire_dmg = 10;
 const int charge_mult = 2;
 const float enemy_heal_threshold = 0.3;
 const int enemy_per_stage = 4;
 const int stage_count = 3;
 const int exp_scale = 10;
-const float diff_scale = 1.2;
+const float diff_scale = 1.5;
 
-const float easy_diff_mult = 0.8;
-const float normal_diff_mult = 1;
-const float hard_diff_mult = 1.6;
+const int armor_cap = 80;
+const int dodge_cap = 80;
+
+const float easy_diff_mult = 1.0;
+const float normal_diff_mult = 1.5;
+const float hard_diff_mult = 2.0;
 
 int malloc_counter = 0;
 int free_counter = 0;
@@ -24,55 +25,39 @@ const Enemy forest_enemies[] = {
 {
     .name = "Slime",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
-    .crit_ch = 20,
-    .crit_dmg = 1.6,
-    .miss_ch = 20,
-    .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
+    .crit_ch = 10,
+    .crit_dmg = 16,
+    .exp_reward = 100,
 },
 {
     .name = "Wolf",
     .dmg = 10,
     .max_hp = 10,
-    .hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Sapling",
     .dmg = 10,
     .max_hp = 10,
-    .hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Forest Elf",
     .dmg = 10,
     .max_hp = 10,
-    .hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
-},
+}
 };
 
 // CAVE ENEMIES -------------------------------------------------------------------------------------------------------
@@ -80,55 +65,39 @@ const Enemy cave_enemies[] = {
 {
     .name = "Zombie",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Skeleton",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
-    .exp_reward = 10,
-    .fire = 0,
-    .stun = 0, 
+    .crit_dmg = 16,
+    .exp_reward = 10, 
 },
 {
     .name = "Spider",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Goblin",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
-},
+}
 };
 
 // CASTLE ENEMIES -----------------------------------------------------------------------------------------------------
@@ -136,98 +105,198 @@ const Enemy castle_enemies[] = {
 {
     .name = "Cursed Knight",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Necromancer",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Cultist",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 },
 {
     .name = "Sorcerer",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
-},
+}
 };
 
 // BOSSES -------------------------------------------------------------------------------------------------------------
 const Enemy forest_boss = {
     .name = "Fire Dragon",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 };
 
 const Enemy cave_boss = {
     .name = "Stone Guardian",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
 };
 
 const Enemy castle_boss = {
     .name = "Evil Wizard",
     .dmg = 10,
-    .max_hp = 100,
-    .hp = 100,
+    .max_hp = 10,
     .armor = 10,
     .crit_ch = 10,
-    .crit_dmg = 1.6,
-    .miss_ch = 10,
+    .crit_dmg = 16,
     .exp_reward = 10,
-    .fire = 0,
-    .stun = 0,
+};
+
+// ITEMS --------------------------------------------------------------------------------------------------------------
+
+const ItemBase common_items[] = {
+{
+    .name = "max_hp",
+    .stat_id = 3,
+    .boost_min = 10,
+    .boost_max = 30,
+},
+{
+    .name = "max_mana",
+    .stat_id = 5,
+    .boost_min = 20,
+    .boost_max = 60,
+},
+{
+    .name = "armor",
+    .stat_id = 7,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "crit_ch",
+    .stat_id = 8,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "crit_dmg",
+    .stat_id = 9,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "zap_dmg",
+    .stat_id = 13,
+    .boost_min = 5,
+    .boost_max = 15,
+},
+{
+    .name = "heal_potion",
+    .stat_id = 2,
+    .boost_min = 1,
+    .boost_max = 3,
+}
+};
+
+const ItemBase rare_items[] = {
+{
+    .name = "exp_boost",
+    .stat_id = 1,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "miss_ch",
+    .stat_id = 10,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "zap_cost",
+    .stat_id = 12,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "charge_cost",
+    .stat_id = 15,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "heal_amount",
+    .stat_id = 4,
+    .boost_min = 15,
+    .boost_max = 35,
+},
+{
+    .name = "rest_amount",
+    .stat_id = 6,
+    .boost_min = 25,
+    .boost_max = 65,
+}
+};
+
+const ItemBase epic_items[] = {
+{
+    .name = "dodge_ch",
+    .stat_id = 11,
+    .boost_min = 5,
+    .boost_max = 15,
+},
+{
+    .name = "zap_stun_ch",
+    .stat_id = 14,
+    .boost_min = 1,
+    .boost_max = 5,
+},
+{
+    .name = "meteor_cost",
+    .stat_id = 17,
+    .boost_min = 5,
+    .boost_max = 15,
+},
+{
+    .name = "meteor_dmg",
+    .stat_id = 18,
+    .boost_min = 5,
+    .boost_max = 10,
+}
+};
+
+const ItemBase legendary_items[] = {
+{
+    .name = "charge_up",
+    .stat_id = 16,
+    .boost_min = 1,
+    .boost_max = 3,
+},
+{
+    .name = "meteor_fire",
+    .stat_id = 19,
+    .boost_min = 1,
+    .boost_max = 3,
+}
 };
 
 // VOICE LINES --------------------------------------------------------------------------------------------------------

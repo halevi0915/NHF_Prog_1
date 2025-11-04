@@ -17,5 +17,6 @@ int pause_menu();
 int game_action(Game* game);
 void game_msg(char* msg, const int is_dynamic, Game* game);
 void game_over(Game* game_ptr);
+int game_item(const Item* items, Game* game_ptr);
 
 #endif

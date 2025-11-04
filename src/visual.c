@@ -113,8 +113,13 @@ void draw_header(Game* game_ptr) {
     for (int i = 2; i < HEIGHT - 9; ++i) {side(i, sector_separator_left, sector_separator_right, 0, 0);}
 
     // player sector
-    side(3, format_string(" LVL %d  < Wizard >", game_ptr->player.lvl), "", 1, 0);
+    side(3, format_string(" LVL %d  < %s >", game_ptr->player.lvl, game_ptr->player.name), "", 1, 0);
     side(4, sector_line_left, sector_line_right, 0, 0);
+
+    side(6, format_string("                                  CRIT   %d%% - %.1fx", game_ptr->player.crit_ch, (game_ptr->player.crit_dmg / 10.0)), "", 1, 0);
+    side(7, format_string("                                  DODGE  %d%%", game_ptr->player.dodge_ch), "", 1, 0);
+    side(8, format_string("                                  CHARGE %dx", game_ptr->player.current_charge), "", 1, 0);
+    side(9, format_string("                                  HEAL   %dx", game_ptr->player.heal_potion), "", 1, 0);
 
     side(6, format_string("                  %d/%d", game_ptr->player.exp, game_ptr->player.next_level_exp), "", 1, 0);
     side(7, format_string("                  %d/%d", game_ptr->player.hp, game_ptr->player.max_hp), "", 1, 0);
@@ -128,6 +133,9 @@ void draw_header(Game* game_ptr) {
     side(10, sector_line_left, "", 0, 0);
     side(21, sector_line_left, "", 0, 0);
     side(23, " < Inventory >", "", 0, 0);
+    for (int i = 0; i < game_ptr->player.inventory.size; ++i) {
+        side(i + 24, format_string(" %s (%d)", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0);
+    }
 
     // enemy sector
     if (game_ptr->enemy.hp == 0) side(3, "", format_string("Dead - < %s > ", game_ptr->enemy.name), 0, 1);
@@ -154,6 +162,7 @@ void draw_header(Game* game_ptr) {
 typedef void (*draw_menu)(const int* x);
 typedef void (*draw_game)(const int* x, Game* game_ptr);
 typedef void (*draw_msg)(char* msg, const int is_dynamic, Game* game_ptr);
+typedef void (*draw_item)(const int* x, const Item* items, Game* game_ptr);
 
 // clear - draw base - refresh combo
 void menu_wrapper(draw_menu func, const int* x) {
@@ -176,6 +185,14 @@ void msg_wrapper(draw_msg func, char* msg, const int is_dynamic, Game* game_ptr)
     draw_base();
     draw_header(game_ptr);
     func(msg, is_dynamic, game_ptr);
+    refresh();
+}
+
+void item_wrapper(draw_item func, const int* x, const Item* items, Game* game_ptr) {
+    clear();
+    draw_base();
+    draw_header(game_ptr);
+    func(x, items, game_ptr);
     refresh();
 }
 
@@ -359,7 +376,7 @@ void game_action_draw(const int* x, Game* game_ptr) {
         case 0:
             side(12, " Lightning Zap", "", 0, 0);
             side(14, format_string(" - Dose %d damage", game_ptr->player.zap_dmg), "", 1, 0);
-            side(15, format_string(" - Has x%% chanche to stun the enemy"), "", 1, 0);
+            side(15, format_string(" - Has %d%% chanche to stun the enemy", game_ptr->player.zap_stun_ch), "", 1, 0);
             side(16, format_string(" - Costs %d mana", game_ptr->player.zap_cost), "", 1, 0);
             side(19, " < Description >", "", 0, 0);
             side(20, " 'When you touch the wrong wire...' ", "", 0, 0);
@@ -383,14 +400,14 @@ void game_action_draw(const int* x, Game* game_ptr) {
             break;
         case 3:
             side(12, " Heal Potion", "", 0, 0);
-            side(14, format_string(" - Restores %d health", heal_amount), "", 1, 0);
+            side(14, format_string(" - Restores %d health", game_ptr->player.heal_amount), "", 1, 0);
             side(15, format_string(" - You currently have %d bottles", game_ptr->player.heal_potion), "", 1, 0);
             side(19, " < Description >", "", 0, 0);
             side(20, " 'Its not white monster i swear' ", "", 0, 0);
             break;
         case 4:
             side(12, " Rest", "", 0, 0);
-            side(14, format_string(" - Restores %d mana", rest_amount), "", 1, 0);
+            side(14, format_string(" - Restores %d mana", game_ptr->player.rest_amount), "", 1, 0);
             side(15, " - Unlimited use", "", 0, 0);
             side(19, " < Description >", "", 0, 0);
             side(20, " 'Quick power nap' ", "", 0, 0);
@@ -410,6 +427,13 @@ void game_msg_draw(char* msg, const int is_dynamic, Game* game_ptr) {
     middle(HEIGHT - 7, "< Press Space >", 0);
 }
 
+void game_item_draw(const int* x, const Item* items, Game* game_ptr) {
+    line(HEIGHT - 9);
+    (*x % 3 == 0) ? side(HEIGHT - 7, format_string(" > [ %s - %d ]", items[0].name, items[0].boost), "", 1, 0) : side(HEIGHT - 7, format_string("   [ %s - %d ]", items[0].name, items[0].boost), "", 1, 0);
+    (*x % 3 == 1) ? side(HEIGHT - 6, format_string(" > [ %s - %d ]", items[1].name, items[1].boost), "", 1, 0) : side(HEIGHT - 6, format_string("   [ %s - %d ]", items[1].name, items[1].boost), "", 1, 0);
+    (*x % 3 == 2) ? side(HEIGHT - 5, format_string(" > [ %s - %d ]", items[2].name, items[2].boost), "", 1, 0) : side(HEIGHT - 5, format_string("   [ %s - %d ]", items[2].name, items[2].boost), "", 1, 0);
+}
+
 // MENUS --------------------------------------------------------------------------------------------------------------
 
 int main_menu() {
@@ -425,7 +449,6 @@ int main_menu() {
             case '\n': return x;
         }
     }
-    
 }
 
 int quit_menu() {
@@ -487,7 +510,6 @@ void game_over(Game* game_ptr) {
         key = getch();
         if (key == ' ') break;
     }
-    
 }
 
 // void debug(Game* game_ptr) {
@@ -521,14 +543,28 @@ int game_action(Game* game_ptr) {
                 return -1; // for pause menu
         }
     }
-    
 }
 
-void game_msg(char* msg, int is_dynamic, Game* game_ptr) {
+void game_msg(char* msg, const int is_dynamic, Game* game_ptr) {
     char key;
     msg_wrapper(game_msg_draw, msg, is_dynamic, game_ptr);
     while (true) {
         key = getch();
         if (key == ' ') break;
+    }
+}
+
+int game_item(const Item* items, Game* game_ptr) {
+    int x = 0;
+    int option_count = 3;
+    char key;
+    while (true) {
+        item_wrapper(game_item_draw, &x, items, game_ptr);
+        key = getch();
+        switch (key) {
+            case 'w': case 'W': x = (x > 0) ? (x - 1) : option_count - 1; break;
+            case 's': case 'S': x = (x < option_count - 1) ? (x + 1) : 0; break;
+            case '\n': return x;
+        }
     }
 }
