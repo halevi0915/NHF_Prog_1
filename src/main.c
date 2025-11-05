@@ -1,5 +1,3 @@
-#include "debugmalloc.h"
-
 #include <ncurses.h>
 #include <stdio.h>
 #include <time.h>
@@ -28,7 +26,6 @@ int main() {
         }
     }
     // quit anim
-    free(game.player.inventory.contents);
     printf("%d malloc\n", malloc_counter);
     printf("%d free\n", free_counter);
     endwin();

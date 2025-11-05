@@ -34,7 +34,7 @@ const Enemy forest_enemies[] = {
     .armor = 10,
     .crit_ch = 10,
     .crit_dmg = 15,
-    .exp_reward = 20,
+    .exp_reward = 2000,
 },
 {
     .name = "Wolf",

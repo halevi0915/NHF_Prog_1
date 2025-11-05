@@ -2,9 +2,6 @@ TODO ---------------------------------------------------------------------------
 must do:
     visual:
     internal:
-        - remove duplicate items
-        - enum stats
-
         - save game sys
         - balance enemies - default player values are low (even 0) can scale with items
         - insane comments in code
@@ -13,15 +10,17 @@ optional:
     visual:
         - transition screen when new stage
         - transition screen when saving like save completed or smth
-        - ascii import, main menu/game over
+        - colored text - side - middle
     internal:
         - if more states more characters -- more items
-        - +stats: def as shield
         - +status confuse - miss ch, poison - less dmg more stacks
         - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
 
 DONE ----------------------------------------------------------------------------------------------
 
+- remove duplicate items
+- wrap items
+- enum stats
 - ascii main menu
 - fix game over - ascii game over
 - name items
@@ -43,6 +42,7 @@ DONE ---------------------------------------------------------------------------
 
 CANCELLED -----------------------------------------------------------------------------------------
 
+- +stats: def as shield
 - look at funcs to make smaller scope inputs (dont need game_ptr) naah
 - random ability texts in global and just meteor_text[randint(x,y)] ai generated only spells - cancelled cuz because
 - pause menu stats: pause menu dosent have access to game_ptr

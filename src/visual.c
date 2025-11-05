@@ -137,8 +137,10 @@ void draw_header(Game* game_ptr) {
     for (int i = 0; i < (WIDTH/3 - 14 - 2)/2; ++i) strcat(inv_help_string, " "); // -14 len of "< Inventory>" -2 cuz border
     strcat(inv_help_string, "< Inventory >");
     side(23, inv_help_string, "", 0, 0);
-    for (int i = 0; i < game_ptr->player.inventory.size; ++i) {
-        side(i + 25, format_string(" - %s (%d)", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0);
+    int i;
+    for (i = 0; i < game_ptr->player.inventory.size; ++i) {
+        if (i % 2 == 0) side(i/2 + 25, format_string("                               - %s", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0);
+        else side(i/2 + 25, format_string("             - %s", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0);
     }
 
     // enemy sector
@@ -159,6 +161,8 @@ void draw_header(Game* game_ptr) {
     middle(3, format_string("Stage: %d", game_ptr->stage), 1);
     middle(4, format_string("Difficulty: %.2fx", game_ptr->diff), 1);
     middle(5, format_string("Boss in %d!", enemy_per_stage - game_ptr->enemy_index + 1), 1);
+    middle(6, format_string("Exp multiplier: %.2fx", game_ptr->player.exp_boost / 10.0), 1);
+    middle(7, format_string("Miss chance: %d%%", game_ptr->player.miss_ch), 1);
 
     line(HEIGHT - 9);
 }   
@@ -490,7 +494,7 @@ void game_item_draw(const int* x, const Item* items, Game* game_ptr) {
                 break;
             case crit_ch: 
                 middle(18 + i*10, "- critical chance -", 0);
-                middle(19 + i*10, format_string("+ %.1f%%", items[i].boost/10.0), 1);
+                middle(19 + i*10, format_string("+ %d%%", items[i].boost), 1);
                 break;
             case crit_dmg: 
                 middle(18 + i*10, "- critical multipier", 0);
@@ -498,11 +502,11 @@ void game_item_draw(const int* x, const Item* items, Game* game_ptr) {
                 break;
             case miss_ch:
                 middle(18 + i*10, "- miss chance -", 0);
-                middle(19 + i*10, format_string("- %.1f%%", items[i].boost/10.0), 1);
+                middle(19 + i*10, format_string("- %d%%", items[i].boost), 1);
                 break;
             case dodge_ch:
                 middle(18 + i*10, "- dodge chance -", 0);
-                middle(19 + i*10, format_string("+ %.1f%%", items[i].boost/10.0), 1);
+                middle(19 + i*10, format_string("+ %d%%", items[i].boost), 1);
                 break;
             case zap_cost:
                 middle(18 + i*10, "- zap cost -", 0);
@@ -514,7 +518,7 @@ void game_item_draw(const int* x, const Item* items, Game* game_ptr) {
                 break;
             case zap_stun_ch:
                 middle(18 + i*10, "- zap stun chance -", 0);
-                middle(19 + i*10, format_string("+ %.1f%%", items[i].boost/10.0), 1);
+                middle(19 + i*10, format_string("+ %d%%", items[i].boost), 1);
                 break;
             case charge_cost:
                 middle(18 + i*10, "- charge cost -", 0);

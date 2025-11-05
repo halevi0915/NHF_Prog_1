@@ -160,7 +160,7 @@ char* add_item(Game* game_ptr, const Item item) {
         case meteor_dmg: game_ptr->player.meteor_dmg += item.boost; break;
         case meteor_fire: game_ptr->player.meteor_fire += item.boost; break;
     }
-    return format_string("New item: %s! (+%d stat)", item.name, item.boost);
+    return format_string("New item: %s!", item.name, item.boost);
 }
 
 char* zap(Game* game_ptr) {
@@ -305,19 +305,25 @@ void enemy_status(Game* game_ptr) {
 
 int enemy_death(Game* game_ptr) {
     if (game_ptr->enemy.hp == 0) {
-        game_ptr->player.exp += game_ptr->enemy.exp_reward * (game_ptr->player.exp_boost / 10.0);
-        game_msg(format_string("%s has been defeated! (%d exp)", game_ptr->enemy.name, game_ptr->enemy.exp_reward), 1, game_ptr);
+        const int exp = game_ptr->enemy.exp_reward * (game_ptr->player.exp_boost / 10.0);
+        game_ptr->player.exp += exp;
+        game_msg(format_string("%s has been defeated! (%d exp)", game_ptr->enemy.name, exp), 1, game_ptr);
 
         while (game_ptr->player.exp >= game_ptr->player.next_level_exp) {
             game_ptr->player.exp -= game_ptr->player.next_level_exp;
             game_ptr->player.lvl += 1;
             game_ptr->player.next_level_exp = game_ptr->player.lvl * exp_scale;
             game_msg("Level up!", 0, game_ptr);
-            Item items[3] = {
-                genetrate_item(game_ptr),
-                genetrate_item(game_ptr),
-                genetrate_item(game_ptr),
-            };
+
+            Item new_item;
+            Item items[3] = {genetrate_item(game_ptr)};
+            do { new_item = genetrate_item(game_ptr);
+            } while (new_item.stat_id == items[0].stat_id);
+            items[1] = new_item;
+            do { new_item = genetrate_item(game_ptr);
+            } while (new_item.stat_id == items[0].stat_id || new_item.stat_id == items[1].stat_id);
+            items[2] = new_item;
+
             switch (game_item(items, game_ptr)) {
                 case 0: game_msg(add_item(game_ptr, items[0]), 1, game_ptr); break;
                 case 1: game_msg(add_item(game_ptr, items[1]), 1, game_ptr); break;
@@ -357,4 +363,5 @@ void game_loop(Game* game_ptr) {
             game_ptr->turn = 1;
         }
     }
+    free(game_ptr->player.inventory.contents);
 }
