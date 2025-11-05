@@ -21,7 +21,7 @@ void init_screen() {
     cbreak();                                       // instant input - dosent buffer
     noecho();                                       // noecho
     curs_set(0);                                    // invisible curzor
-    keypad(stdscr, TRUE);                           // nyilakhoz kell (nincs hasznalva)
+    //keypad(stdscr, TRUE);                           // nyilakhoz kell
     nodelay(stdscr, FALSE);                         // blocking input: getch() waits for next input and doesnt give err
 
     // COLOR
@@ -89,26 +89,26 @@ void draw_base() {
 
 // megrajzolja az alap kinézetet - statok
 void draw_header(Game* game_ptr) {
-    char sector_separator_left[WIDTH / 3 + 1 - 4]; // -4 adjusting / kerekities
-    char sector_separator_right[WIDTH / 3 + 1 - 4];
-    char sector_line_left[WIDTH / 3 + 1 - 4];
-    char sector_line_right[WIDTH / 3 + 1 - 4];
+    char sector_separator_left[WIDTH / 3 + 1 - 2]; // -2 adjusting / cuz border
+    char sector_separator_right[WIDTH / 3 + 1 - 2];
+    char sector_line_left[WIDTH / 3 + 1 - 2];
+    char sector_line_right[WIDTH / 3 + 1 - 2];
 
     sector_separator_right[0] = '|';
     sector_line_right[0] = '|';
-    for (int i = 0; i < WIDTH / 3 - 4; ++i) {
+    for (int i = 0; i < WIDTH / 3 - 2; ++i) {
         sector_separator_left[i] = ' ';
         sector_separator_right[i+1] = ' ';
         sector_line_left[i] = '_';
         sector_line_right[i+1] = '_';
     }
-    sector_separator_left[WIDTH / 3 - 4] = '|';
-    sector_line_left[WIDTH / 3 - 4] = '|';
+    sector_separator_left[WIDTH / 3 - 2] = '|';
+    sector_line_left[WIDTH / 3 - 2] = '|';
 
-    sector_separator_left[WIDTH / 3 + 1 - 4] = '\0';
-    sector_separator_right[WIDTH / 3 + 1 - 4] = '\0';
-    sector_line_left[WIDTH / 3 + 1 - 4] = '\0';
-    sector_line_right[WIDTH / 3 + 1 - 4] = '\0';
+    sector_separator_left[WIDTH / 3 + 1 - 2] = '\0';
+    sector_separator_right[WIDTH / 3 + 1 - 2] = '\0';
+    sector_line_left[WIDTH / 3 + 1 - 2] = '\0';
+    sector_line_right[WIDTH / 3 + 1 - 2] = '\0';
 
     for (int i = 2; i < HEIGHT - 9; ++i) {side(i, sector_separator_left, sector_separator_right, 0, 0);}
 
@@ -131,10 +131,14 @@ void draw_header(Game* game_ptr) {
     side(9, format_string(" DEF %d%% ", game_ptr->player.armor), "", 1, 0);
 
     side(10, sector_line_left, "", 0, 0);
+
     side(21, sector_line_left, "", 0, 0);
-    side(23, " < Inventory >", "", 0, 0);
+    char inv_help_string[100] = "";
+    for (int i = 0; i < (WIDTH/3 - 14 - 2)/2; ++i) strcat(inv_help_string, " "); // -14 len of "< Inventory>" -2 cuz border
+    strcat(inv_help_string, "< Inventory >");
+    side(23, inv_help_string, "", 0, 0);
     for (int i = 0; i < game_ptr->player.inventory.size; ++i) {
-        side(i + 24, format_string(" %s (%d)", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0);
+        side(i + 25, format_string(" - %s (%d)", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0);
     }
 
     // enemy sector
@@ -153,8 +157,10 @@ void draw_header(Game* game_ptr) {
 
     // middle sector
     middle(3, format_string("Stage: %d", game_ptr->stage), 1);
-    middle(4, format_string("Difficulty: %.2f", game_ptr->diff), 1);
+    middle(4, format_string("Difficulty: %.2fx", game_ptr->diff), 1);
     middle(5, format_string("Boss in %d!", enemy_per_stage - game_ptr->enemy_index + 1), 1);
+
+    line(HEIGHT - 9);
 }   
 
 // WRAPPERS -----------------------------------------------------------------------------------------------------------
@@ -199,7 +205,15 @@ void item_wrapper(draw_item func, const int* x, const Item* items, Game* game_pt
 // MENU DRAW ----------------------------------------------------------------------------------------------------------
 
 void main_menu_draw(const int* x) {
-    middle(3, "Journey of the Wizard", 0);
+    middle(5,  "       _                                            __   _______ _           __          ___                  _ ", 0);
+    middle(6,  "      | |                                          / _| |__   __| |          \\ \\        / (_)                | |", 0);
+    middle(7,  "      | | ___  _   _ _ __ _ __   ___ _   _    ___ | |_     | |  | |__   ___   \\ \\  /\\  / / _ ______ _ _ __ __| |", 0);
+    middle(8,  "  _   | |/ _ \\| | | | '__| '_ \\ / _ \\ | | |  / _ \\|  _|    | |  | '_ \\ / _ \\   \\ \\/  \\/ / | |_  / _` | '__/ _` |", 0);
+    middle(9,  " | |__| | (_) | |_| | |  | | | |  __/ |_| | | (_) | |      | |  | | | |  __/    \\  /\\  /  | |/ / (_| | | | (_| |", 0);
+    middle(10, "  \\____/ \\___/ \\__,_|_|  |_| |_|\\___|\\__, |  \\___/|_|      |_|  |_| |_|\\___|     \\/  \\/   |_/___\\__,_|_|  \\__,_|", 0);
+    middle(11, "                                      __/ |                                                                     ", 0);
+    middle(12, "                                     |___/                                                                      ", 0);
+    //middle(3, "Journey of the Wizard", 0);
     middle(HEIGHT - 14, "+-----------+", 0);
     middle(HEIGHT - 13,"| by:Profit |", 0);
     line(HEIGHT - 12);
@@ -324,7 +338,13 @@ void pause_menu_draw(const int* x) {
 }
 
 void game_over_draw(const int* x) {
-    middle(3, "Game Over", 0);
+    middle(5, "   _____                         ____                 ", 0);
+    middle(6, "  / ____|                       / __ \\                ", 0);
+    middle(7, " | |  __  __ _ _ __ ___   ___  | |  | |_   _____ _ __ ", 0);
+    middle(8, " | | |_ |/ _` | '_ ` _ \\ / _ \\ | |  | \\ \\ / / _ \\ '__|", 0);
+    middle(9, " | |__| | (_| | | | | | |  __/ | |__| |\\ V /  __/ |   ", 0);
+    middle(10, "  \\_____|\\__,_|_| |_| |_|\\___|  \\____/  \\_/ \\___|_|   ", 0);
+    //middle(3, "Game Over", 0);
     line(HEIGHT - 12);
     middle(HEIGHT - 8, "< Main menu >", 0);
 }
@@ -371,7 +391,6 @@ void game_over_draw(const int* x) {
 // }
 
 void game_action_draw(const int* x, Game* game_ptr) {
-    line(HEIGHT - 9);
     switch (*x % 5) { // action desc
         case 0:
             side(12, " Lightning Zap", "", 0, 0);
@@ -384,7 +403,7 @@ void game_action_draw(const int* x, Game* game_ptr) {
         case 1:
             side(12, " Overcharged Wand", "", 0, 0);
             side(14, format_string(" - Charges your want up by %d", game_ptr->player.charge_up), "", 1, 0);
-            side(15, format_string(" - Every charge gives an %d damage multipiler", charge_mult), "", 1, 0);
+            side(15, format_string(" - Every charge gives a %dx damage multipiler", charge_mult), "", 1, 0);
             side(16, format_string(" - Your wand is currently charged up by %d", game_ptr->player.current_charge), "", 1, 0);
             side(17, format_string(" - Costs %d mana", game_ptr->player.charge_cost), "", 1, 0);
             side(19, " < Description >", "", 0, 0);
@@ -422,16 +441,103 @@ void game_action_draw(const int* x, Game* game_ptr) {
 }
 
 void game_msg_draw(char* msg, const int is_dynamic, Game* game_ptr) {
-    line(HEIGHT - 9);
     middle(HEIGHT - 10, msg, is_dynamic);
     middle(HEIGHT - 7, "< Press Space >", 0);
 }
 
 void game_item_draw(const int* x, const Item* items, Game* game_ptr) {
-    line(HEIGHT - 9);
-    (*x % 3 == 0) ? side(HEIGHT - 7, format_string(" > [ %s - %d ]", items[0].name, items[0].boost), "", 1, 0) : side(HEIGHT - 7, format_string("   [ %s - %d ]", items[0].name, items[0].boost), "", 1, 0);
-    (*x % 3 == 1) ? side(HEIGHT - 6, format_string(" > [ %s - %d ]", items[1].name, items[1].boost), "", 1, 0) : side(HEIGHT - 6, format_string("   [ %s - %d ]", items[1].name, items[1].boost), "", 1, 0);
-    (*x % 3 == 2) ? side(HEIGHT - 5, format_string(" > [ %s - %d ]", items[2].name, items[2].boost), "", 1, 0) : side(HEIGHT - 5, format_string("   [ %s - %d ]", items[2].name, items[2].boost), "", 1, 0);
+    middle(11, "< Choose an Item >", 0);
+
+    for (int i = 0; i < 3; ++i) {
+        middle(14 + i*10, " ___________________________________ ", 0);
+        middle(15 + i*10, "|                                   |", 0);
+        middle(16 + i*10, "|                                   |", 0);
+        middle(17 + i*10, "|                                   |", 0);
+        middle(18 + i*10, "|                                   |", 0);
+        middle(19 + i*10, "|                                   |", 0);
+        middle(20 + i*10, "|___________________________________|", 0);
+
+        middle(22 + (*x % 3)*10, "<X>", 0);
+        middle(16 + i*10, format_string("%s", items[i].name), 1);
+        switch (items[i].stat_id) {
+            case exp_boost: 
+                middle(18 + i*10, "- experience boost -", 0);
+                middle(19 + i*10, format_string("+ %d%%", items[i].boost), 1);
+                break;
+            case heal_potion: 
+                middle(18 + i*10, "- gain extra heal potion -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case max_hp: 
+                middle(18 + i*10, "- max health -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case heal_amount: 
+                middle(18 + i*10, "- heal potion upgrade -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case max_mana: 
+                middle(18 + i*10, "- max mana -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case rest_amount: 
+                middle(18 + i*10, "- rest upgrade -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case armor: 
+                middle(18 + i*10, "- armor upgrade -", 0);
+                middle(19 + i*10, format_string("+ %d%%", items[i].boost), 1);
+                break;
+            case crit_ch: 
+                middle(18 + i*10, "- critical chance -", 0);
+                middle(19 + i*10, format_string("+ %.1f%%", items[i].boost/10.0), 1);
+                break;
+            case crit_dmg: 
+                middle(18 + i*10, "- critical multipier", 0);
+                middle(19 + i*10, format_string("+ %.1fx", items[i].boost/10.0), 1);
+                break;
+            case miss_ch:
+                middle(18 + i*10, "- miss chance -", 0);
+                middle(19 + i*10, format_string("- %.1f%%", items[i].boost/10.0), 1);
+                break;
+            case dodge_ch:
+                middle(18 + i*10, "- dodge chance -", 0);
+                middle(19 + i*10, format_string("+ %.1f%%", items[i].boost/10.0), 1);
+                break;
+            case zap_cost:
+                middle(18 + i*10, "- zap cost -", 0);
+                middle(19 + i*10, format_string("- %d", items[i].boost), 1);
+                break;
+            case zap_dmg:
+                middle(18 + i*10, "- zap damage -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case zap_stun_ch:
+                middle(18 + i*10, "- zap stun chance -", 0);
+                middle(19 + i*10, format_string("+ %.1f%%", items[i].boost/10.0), 1);
+                break;
+            case charge_cost:
+                middle(18 + i*10, "- charge cost -", 0);
+                middle(19 + i*10, format_string("- %d", items[i].boost), 1);
+                break;
+            case charge_up:
+                middle(18 + i*10, "- charge amount -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case meteor_cost:
+                middle(18 + i*10, "- meteor cost -", 0);
+                middle(19 + i*10, format_string("- %d", items[i].boost), 1);
+                break;
+            case meteor_dmg:
+                middle(18 + i*10, "- meteor damage -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+            case meteor_fire:
+                middle(18 + i*10, "- meteor fire amount -", 0);
+                middle(19 + i*10, format_string("+ %d", items[i].boost), 1);
+                break;
+        }
+    }
 }
 
 // MENUS --------------------------------------------------------------------------------------------------------------

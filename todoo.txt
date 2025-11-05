@@ -1,11 +1,10 @@
 TODO ----------------------------------------------------------------------------------------------
 must do:
     visual:
-        - name items
-        - lehet elobb ujrairni a menu controllt
-        - visual part - hozza kene ferni a 3 generalt itemhez
-        - fix game over
     internal:
+        - remove duplicate items
+        - enum stats
+
         - save game sys
         - balance enemies - default player values are low (even 0) can scale with items
         - insane comments in code
@@ -23,6 +22,9 @@ optional:
 
 DONE ----------------------------------------------------------------------------------------------
 
+- ascii main menu
+- fix game over - ascii game over
+- name items
 - multiple items - rarity part - condition part when generating - player inventory - make items - item choose menu / malloc - dynamic inventory array
 - exp boost
 - enemy_miss_ch --> player_dodge_ch

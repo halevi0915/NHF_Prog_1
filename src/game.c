@@ -61,21 +61,21 @@ Game create_new_game() {
 
         .max_hp = 100,
         .hp = 100,
-        .heal_amount = 40,
+        .heal_amount = 30,
 
         .max_mana = 200,
         .mana = 200,
-        .rest_amount = 50,
+        .rest_amount = 30,
         
         .armor = 10,
-        .crit_ch = 50,
+        .crit_ch = 10,
         .crit_dmg = 12,
         .miss_ch = 5,
         .dodge_ch = 10,
 
         .zap_cost = 20,
         .zap_dmg = 10,
-        .zap_stun_ch = 30,
+        .zap_stun_ch = 10,
 
         .charge_cost = 40,
         .charge_up = 1,
@@ -111,14 +111,14 @@ Item genetrate_item(Game* game_ptr) {
         else if (rng > 75 && rng <= 95) new_item_base = epic_items[randint(0,3)];
         else new_item_base = legendary_items[randint(0,1)];
 
-        if (new_item_base.stat_id == 7 && game_ptr->player.armor == armor_cap) item_good = false;
-        else if (new_item_base.stat_id == 8 && game_ptr->player.crit_ch == 100) item_good = false;
-        else if (new_item_base.stat_id == 10 && game_ptr->player.miss_ch == 0) item_good = false;
-        else if (new_item_base.stat_id == 11 && game_ptr->player.dodge_ch == dodge_cap) item_good = false;
-        else if (new_item_base.stat_id == 12 && game_ptr->player.zap_dmg == 0) item_good = false;
-        else if (new_item_base.stat_id == 14 && game_ptr->player.zap_stun_ch == 100) item_good = false;
-        else if (new_item_base.stat_id == 15 && game_ptr->player.charge_cost == 0) item_good = false;
-        else if (new_item_base.stat_id == 17 && game_ptr->player.meteor_cost == 0) item_good = false;
+        if (new_item_base.stat_id == armor && game_ptr->player.armor == armor_cap) item_good = false;
+        else if (new_item_base.stat_id == crit_ch && game_ptr->player.crit_ch == 100) item_good = false;
+        else if (new_item_base.stat_id == miss_ch && game_ptr->player.miss_ch == 0) item_good = false;
+        else if (new_item_base.stat_id == dodge_ch && game_ptr->player.dodge_ch == dodge_cap) item_good = false;
+        else if (new_item_base.stat_id == zap_cost && game_ptr->player.zap_cost == 0) item_good = false;
+        else if (new_item_base.stat_id == zap_stun_ch && game_ptr->player.zap_stun_ch == 100) item_good = false;
+        else if (new_item_base.stat_id == charge_cost && game_ptr->player.charge_cost == 0) item_good = false;
+        else if (new_item_base.stat_id == meteor_cost && game_ptr->player.meteor_cost == 0) item_good = false;
 
     } while (!item_good);
     Item new_item = {
@@ -140,25 +140,25 @@ char* add_item(Game* game_ptr, const Item item) {
     //for (int i = 0; i < game_ptr->player.inventory.size; ++i) printf("%s - %d\n", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost);
 
     switch (item.stat_id) {
-        case 1: game_ptr->player.exp_boost += item.boost; break;
-        case 2: game_ptr->player.heal_potion += item.boost; break;
-        case 3: game_ptr->player.max_hp += item.boost; break;
-        case 4: game_ptr->player.heal_amount += item.boost; break;
-        case 5: game_ptr->player.max_mana += item.boost; break;
-        case 6: game_ptr->player.rest_amount += item.boost; break;
-        case 7: game_ptr->player.armor = min(game_ptr->player.armor + item.boost, armor_cap); break;
-        case 8: game_ptr->player.crit_ch = min(game_ptr->player.crit_ch + item.boost, 100); break;
-        case 9: game_ptr->player.crit_dmg += item.boost; break;
-        case 10: game_ptr->player.miss_ch = max(game_ptr->player.miss_ch - item.boost, 0); break;
-        case 11: game_ptr->player.dodge_ch = min(game_ptr->player.dodge_ch + item.boost, dodge_cap); break;
-        case 12: game_ptr->player.zap_cost = max(game_ptr->player.zap_cost - item.boost, 0); break;
-        case 13: game_ptr->player.zap_dmg += item.boost; break;
-        case 14: game_ptr->player.zap_stun_ch = min(game_ptr->player.zap_stun_ch + item.boost, 100); break;
-        case 15: game_ptr->player.charge_cost = max(game_ptr->player.charge_cost - item.boost, 0); break;
-        case 16: game_ptr->player.charge_up += item.boost; break;
-        case 17: game_ptr->player.meteor_cost = max(game_ptr->player.meteor_cost - item.boost, 0); break;
-        case 18: game_ptr->player.meteor_dmg += item.boost; break;
-        case 19: game_ptr->player.meteor_fire += item.boost; break;
+        case exp_boost: game_ptr->player.exp_boost += item.boost; break;
+        case heal_potion: game_ptr->player.heal_potion += item.boost; break;
+        case max_hp: game_ptr->player.max_hp += item.boost; break;
+        case heal_amount: game_ptr->player.heal_amount += item.boost; break;
+        case max_mana: game_ptr->player.max_mana += item.boost; break;
+        case rest_amount: game_ptr->player.rest_amount += item.boost; break;
+        case armor: game_ptr->player.armor = min(game_ptr->player.armor + item.boost, armor_cap); break;
+        case crit_ch: game_ptr->player.crit_ch = min(game_ptr->player.crit_ch + item.boost, 100); break;
+        case crit_dmg: game_ptr->player.crit_dmg += item.boost; break;
+        case miss_ch: game_ptr->player.miss_ch = max(game_ptr->player.miss_ch - item.boost, 0); break;
+        case dodge_ch: game_ptr->player.dodge_ch = min(game_ptr->player.dodge_ch + item.boost, dodge_cap); break;
+        case zap_cost: game_ptr->player.zap_cost = max(game_ptr->player.zap_cost - item.boost, 0); break;
+        case zap_dmg: game_ptr->player.zap_dmg += item.boost; break;
+        case zap_stun_ch: game_ptr->player.zap_stun_ch = min(game_ptr->player.zap_stun_ch + item.boost, 100); break;
+        case charge_cost: game_ptr->player.charge_cost = max(game_ptr->player.charge_cost - item.boost, 0); break;
+        case charge_up: game_ptr->player.charge_up += item.boost; break;
+        case meteor_cost: game_ptr->player.meteor_cost = max(game_ptr->player.meteor_cost - item.boost, 0); break;
+        case meteor_dmg: game_ptr->player.meteor_dmg += item.boost; break;
+        case meteor_fire: game_ptr->player.meteor_fire += item.boost; break;
     }
     return format_string("New item: %s! (+%d stat)", item.name, item.boost);
 }
@@ -275,8 +275,8 @@ void enemy_turn (Game* game_ptr) {
         game_ptr->enemy.stun = 0;
         game_msg(format_string("%s is stunned!", game_ptr->enemy.name), 1, game_ptr);
     }
-    else if (game_ptr->enemy.hp <= game_ptr->enemy.max_hp * enemy_heal_threshold) {
-        game_ptr->enemy.hp = min(game_ptr->enemy.hp + enemy_heal_amount, game_ptr->enemy.max_hp);
+    else if (game_ptr->enemy.hp <= game_ptr->enemy.max_hp * (enemy_heal_threshold / 100.0)) {
+        game_ptr->enemy.hp = min(game_ptr->enemy.hp + enemy_heal_amount * game_ptr->diff, game_ptr->enemy.max_hp);
         game_msg(format_string("%s healed! (+%d hp)", game_ptr->enemy.name, enemy_heal_amount), 1, game_ptr);
     } else {
         if (calc_chance(game_ptr->player.dodge_ch)) game_msg(format_string("%s missed you! (%d%%)", game_ptr->enemy.name, game_ptr->player.dodge_ch), 1, game_ptr);
@@ -291,9 +291,9 @@ void enemy_turn (Game* game_ptr) {
     }
 }
 
-void player_status(Game* game_ptr) {
-    // no need for now
-}
+// void player_status(Game* game_ptr) {
+//     // no need for now
+// }
 
 void enemy_status(Game* game_ptr) {
     if (game_ptr->enemy.fire > 0) {
@@ -307,9 +307,6 @@ int enemy_death(Game* game_ptr) {
     if (game_ptr->enemy.hp == 0) {
         game_ptr->player.exp += game_ptr->enemy.exp_reward * (game_ptr->player.exp_boost / 10.0);
         game_msg(format_string("%s has been defeated! (%d exp)", game_ptr->enemy.name, game_ptr->enemy.exp_reward), 1, game_ptr);
-
-        generate_enemy(game_ptr);
-        game_msg(format_string("New enemy approaches! (%s)", game_ptr->enemy.name), 1, game_ptr);
 
         while (game_ptr->player.exp >= game_ptr->player.next_level_exp) {
             game_ptr->player.exp -= game_ptr->player.next_level_exp;
@@ -327,6 +324,9 @@ int enemy_death(Game* game_ptr) {
                 case 2: game_msg(add_item(game_ptr, items[2]), 1, game_ptr); break;
             }
         }
+
+        generate_enemy(game_ptr);
+        game_msg(format_string("New enemy approaches! (%s)", game_ptr->enemy.name), 1, game_ptr);
     }
 }
 
@@ -339,8 +339,8 @@ void game_loop(Game* game_ptr) {
     int game_running = 1;
     while (game_running) {    
         if (game_ptr->turn) {
-            player_status(game_ptr);
-            game_running = player_death(game_ptr);
+            //player_status(game_ptr);
+            //game_running = player_death(game_ptr);
             switch (player_turn(game_ptr)) {
                 case 0: game_ptr->turn = 0; break;
                 case 1:
