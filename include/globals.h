@@ -21,10 +21,6 @@ extern const int dodge_cap;
 extern const int enemy_heal_amount;
 extern const int enemy_heal_threshold;
 
-// sys
-extern int malloc_counter;
-extern int free_counter;
-
 typedef enum Colors {
     WHITE = 1,
     RED,
@@ -130,7 +126,6 @@ typedef struct Game {
     int stage;
     int enemy_index;
     float diff;
-    int is_story;
 } Game;
 
 extern const Enemy forest_enemies[];

@@ -1,5 +1,10 @@
 TODO ------------------------------------------------------------------------------------------------------------------
 must do:
+    dokument:
+        - WIP file_handler
+        - exit codes
+        - elso oldalra még több általános dolog
+        - globalsban konstans táblázat
     color:
     visual:
     internal:
@@ -53,7 +58,7 @@ CANCELLED ----------------------------------------------------------------------
 - +stats: def as shield
 - look at funcs to make smaller scope inputs (dont need game_ptr) naah
 - random ability texts in global and just meteor_text[randint(x,y)] ai generated only spells - cancelled cuz because
-- pause menu stats: pause menu dosent have access to game_ptr
+- pause menu stats: pause menu doesnt have access to game_ptr
 - colored text
 - text animation??? nope
 - menu for lores

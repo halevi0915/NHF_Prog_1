@@ -7,6 +7,16 @@
 #include "game.h"
 #include "visual.h"
 
+/*
+main modul:
+    - inicializálja a megjelenítést: init_screen()
+    - addig futtat egy loop-ot amig a felhasználó nem lép ki: program_running = quit_menu()
+    - a loopban a főmenü visszatérési értéke alapján:
+        - létrehoz egy új játékot és elindítja azt
+        - (WIP) betölt egy mentést és elindítja azt
+        - meghívja a kilépés menüt amiben ha a felhasználó yes-t választ, kilép a loop-bol
+    - a végén a megjelenítést be kell fejezni: endwin()
+*/
 int main() {
     init_screen();
     srand(time(NULL));
@@ -25,8 +35,8 @@ int main() {
             case 2: program_running = quit_menu(); break; // 0: yes 1: no 
         }
     }
-    printf("%d malloc\n", malloc_counter);
-    printf("%d free\n", free_counter);
+    //printf("%d malloc\n", malloc_counter);
+    //printf("%d free\n", free_counter);
     endwin();
     return 0;
 }

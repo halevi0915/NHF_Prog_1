@@ -18,7 +18,7 @@ void init_screen() {
     initscr();                                      // stdscr a default screen pointer, nem kell elmenteni kulon
 
     // SETTINGS
-    cbreak();                                       // instant input - dosent buffer
+    cbreak();                                       // instant input - doesnt buffer
     noecho();                                       // noecho
     curs_set(0);                                    // invisible curzor
     //keypad(stdscr, TRUE);                           // nyilakhoz kell
@@ -45,7 +45,7 @@ void init_screen() {
 // az adott sorra egy vonalat rajzol
 void line(const int row) {
     char t[WIDTH+1];                                        // +1 for \0
-    int middle_len = (WIDTH - 6 > 0) ? (WIDTH - 6) : 0;     // -6 for the 2 '|'
+    int middle_len = (WIDTH - 6 > 0) ? (WIDTH - 6) : 0;     // -6 for the 2 '|' + 4 ' '
 
     // FILL
     t[0] = ' ';
@@ -70,7 +70,7 @@ void middle(const int row, char* msg, const int is_dynamic, const Colors color) 
     attron(COLOR_PAIR(color));
     mvprintw(row, x_pos, "%s", msg);
     attron(COLOR_PAIR(WHITE));
-    if (is_dynamic) {free(msg); ++free_counter;}
+    if (is_dynamic) free(msg);
 }
 
 // az adott sor két szélére irja a két msg-t (ha csak egyik oldalra irunk a masik ures)
@@ -79,8 +79,8 @@ void side(const int row, char* msg_1, char* msg_2, const int is_dynamic_1, const
     mvprintw(row, 3, "%s", msg_1);                              // 3-al beljebb a draw_base elferese miatt
     mvprintw(row, WIDTH - (3 + strlen(msg_2)), "%s", msg_2);    // es WIDTH - 3
     attron(COLOR_PAIR(WHITE));
-    if (is_dynamic_1) {free(msg_1); ++free_counter;}
-    if (is_dynamic_2) {free(msg_2); ++free_counter;}
+    if (is_dynamic_1) free(msg_1);
+    if (is_dynamic_2) free(msg_2);
 }
 
 // megrajzolja az alap kinézetet - vonalak minden oldalon
@@ -415,7 +415,7 @@ void game_action_draw(const int* x, Game* game_ptr) {
             side(12, "                 >", "", 0, 0, WHITE);
             side(12, "   Lightning Zap", "", 0, 0, YELLOW);
             side(12, " <", "", 0, 0, WHITE);
-            side(14, format_string(" - Dose %d damage", game_ptr->player.zap_dmg), "", 1, 0, WHITE);
+            side(14, format_string(" - Does %d damage", game_ptr->player.zap_dmg), "", 1, 0, WHITE);
             side(15, format_string(" - Has %d%% chanche to stun the enemy", game_ptr->player.zap_stun_ch), "", 1, 0, WHITE);
             side(16, format_string(" - Costs %d mana", game_ptr->player.zap_cost), "", 1, 0, WHITE);
             side(20, " 'When you touch the wrong wire...' ", "", 0, 0, WHITE);
@@ -434,7 +434,7 @@ void game_action_draw(const int* x, Game* game_ptr) {
             side(12, "                 >", "", 0, 0, WHITE);
             side(12, "   Meteor Strike", "", 0, 0, YELLOW);
             side(12, " <", "", 0, 0, WHITE);
-            side(14, format_string(" - Dose %d damage", game_ptr->player.meteor_dmg), "", 1, 0, WHITE);
+            side(14, format_string(" - Does %d damage", game_ptr->player.meteor_dmg), "", 1, 0, WHITE);
             side(15, format_string(" - Sets the enemy on fire for %d turns", game_ptr->player.meteor_fire), "", 1, 0, WHITE);
             side(16, format_string(" - Costs %d mana", game_ptr->player.meteor_cost), "", 1, 0, WHITE);
             side(20, " 'Big rock goes brrr' ", "", 0, 0, WHITE);

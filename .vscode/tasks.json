@@ -10,7 +10,8 @@
                 "ncurses/pdcurses/*.c",
                 "ncurses/wincon/*.c",
                 "-Iinclude",
-                "-o main.exe"
+                "-o",
+                "main.exe"
             ],
             "group": {
                 "kind": "build",
