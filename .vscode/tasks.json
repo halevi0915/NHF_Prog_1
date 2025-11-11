@@ -7,10 +7,10 @@
             "command": "C:/msys64/mingw64/bin/gcc.exe",
             "args": [
                 "src/*.c",
+                "ncurses/pdcurses/*.c",
+                "ncurses/wincon/*.c",
                 "-Iinclude",
-                "-lncursesw",
-                "-o",
-                "main.exe"
+                "-o main.exe"
             ],
             "group": {
                 "kind": "build",

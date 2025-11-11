@@ -1,6 +1,6 @@
 #include "debugmalloc.h"
+#include "curses.h"
 
-#include <ncurses.h>
 #include <string.h>
 #include <stdlib.h>
 
