@@ -49,16 +49,21 @@ char* format_string(const char* format, ...) {
     return buffer;
 }
 
+// return a str with the values in visual form with the message: message 30/100 --> message [###-------]
 char* bar_string(const char* text, const int current_value, const int max_value) {
     int text_len = strlen(text);
     int ratio = ((float)current_value / ((float)max_value / 100)) / 10;
+
     char* buffer = malloc(sizeof(char) * (13 + text_len));
     ++malloc_counter;
+
     if (buffer == NULL) {printf("bar str alloc error"); exit(1);};  // alloc error
+
     for (int i = 0; i < text_len; ++i) {buffer[i] = text[i];}
     buffer[text_len + 0] = '[';
     for (int i = 1; i <= 10; ++i) {buffer[text_len + i] = (i <= ratio) ? '#' : '-';}
     buffer[text_len + 11] = ']';
     buffer[text_len + 12] = '\0';
+
     return buffer;
 }

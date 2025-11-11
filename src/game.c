@@ -126,7 +126,6 @@ Item genetrate_item(Game* game_ptr) {
         .boost = randint(new_item_base.boost_min * 10, new_item_base.boost_max * 10) / 10.0
     };
     strcpy(new_item.name, new_item_base.name);
-    //printf("boost: %d\n", new_item.boost);
     return new_item;
 }
 
@@ -135,9 +134,6 @@ char* add_item(Game* game_ptr, const Item item) {
     game_ptr->player.inventory.contents = realloc(game_ptr->player.inventory.contents, game_ptr->player.inventory.size * sizeof(Item));
     if (game_ptr->player.inventory.contents == NULL) {printf("inv realloc error"); exit(1);}
     game_ptr->player.inventory.contents[game_ptr->player.inventory.size-1] = item;
-
-    //printf("realloc to %d size\n", game_ptr->player.inventory.size);
-    //for (int i = 0; i < game_ptr->player.inventory.size; ++i) printf("%s - %d\n", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost);
 
     switch (item.stat_id) {
         case exp_boost: game_ptr->player.exp_boost += item.boost; break;

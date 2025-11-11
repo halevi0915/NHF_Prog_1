@@ -25,6 +25,14 @@ extern const int enemy_heal_threshold;
 extern int malloc_counter;
 extern int free_counter;
 
+typedef enum Colors {
+    WHITE = 1,
+    RED,
+    GREEN,
+    BLUE,
+    YELLOW
+} Colors;
+
 typedef enum Stats {
     exp_boost,
     heal_potion,

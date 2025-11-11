@@ -17,7 +17,6 @@ int main() {
             case 0:
                 game = create_new_game();
                 game_loop(&game);
-                //quit anim
                 break;
             case 1:
                 // if (save_present()) game = load_game();
@@ -25,7 +24,6 @@ int main() {
             case 2: program_running = quit_menu(); break; // 0: yes 1: no 
         }
     }
-    // quit anim
     printf("%d malloc\n", malloc_counter);
     printf("%d free\n", free_counter);
     endwin();

@@ -1,23 +1,31 @@
-TODO ----------------------------------------------------------------------------------------------
+TODO ------------------------------------------------------------------------------------------------------------------
 must do:
+    color:
     visual:
     internal:
+        - inventory linked list - must have - groups of orbs - stats add up - name are just "orb of fire-damage-critical chance-ect" - then no ai included
+        - learn linked list
+
+
+
         - save game sys
         - balance enemies - default player values are low (even 0) can scale with items
         - insane comments in code
 
 optional:
     visual:
+        - side note: can have full white space with white background 
+        - can change name?
         - transition screen when new stage
         - transition screen when saving like save completed or smth
-        - colored text - side - middle
     internal:
         - if more states more characters -- more items
         - +status confuse - miss ch, poison - less dmg more stacks
         - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
 
-DONE ----------------------------------------------------------------------------------------------
+DONE ------------------------------------------------------------------------------------------------------------------
 
+- colored text - side - middle
 - remove duplicate items
 - wrap items
 - enum stats
@@ -40,7 +48,7 @@ DONE ---------------------------------------------------------------------------
 - in game spell description when hoevered
 - improve viuals in game - full overhaul but same tools
 
-CANCELLED -----------------------------------------------------------------------------------------
+CANCELLED -------------------------------------------------------------------------------------------------------------
 
 - +stats: def as shield
 - look at funcs to make smaller scope inputs (dont need game_ptr) naah
@@ -54,7 +62,7 @@ CANCELLED ----------------------------------------------------------------------
 - ancient wizard unlockable
 - use enums idk if good idea maybe later
 
-AGENDA --------------------------------------------------------------------------------------------
+AGENDA - STANDARDS ----------------------------------------------------------------------------------------------------
 
 - funcba akkor const ha sehol se valtozik
     nem lehet const msg, game_ptr
@@ -65,8 +73,9 @@ AGENDA -------------------------------------------------------------------------
 - struct valahol él onnan csak pointert adsz tovabb
 - check for every divison if it needs (float) cast
 - struct felsorolas vegen nincs vesszo
+- a "----" mindig a 120. karakterig megy
 
-STURCTURE -----------------------------------------------------------------------------------------
+STURCTURE -------------------------------------------------------------------------------------------------------------
 
 there are enemy constants in global - u copy it and use that
 functions take the pointers of the used enemy/player/game
@@ -83,7 +92,7 @@ turn:
 0 enemy
 1 player
 
-ASCII IMPORT --------------------------------------------------------------------------------------
+ASCII IMPORT NAAAH ----------------------------------------------------------------------------------------------------
 
 - 2d array
 - file_handler.c
@@ -91,10 +100,9 @@ ASCII IMPORT -------------------------------------------------------------------
 - malloc for universal? or input row/col
 
 vagy nem mivel lehet mashova nem is kell ascii art
-ha keves kell akkor lehet hardcode-olni 
-- hátrány: nem lehet \-t hasznalni
+ha keves kell akkor lehet hardcode-olni yup
 
-INVENTORY NOTES -----------------------------------------------------------------------------------
+INVENTORY NOTES -------------------------------------------------------------------------------------------------------
 - többfele item van
 - egy itembol tobb is lehet
 - player - inventory - item
