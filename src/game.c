@@ -300,7 +300,7 @@ void enemy_status(Game* game_ptr) {
     }
 }
 
-int enemy_death(Game* game_ptr) {
+void enemy_death(Game* game_ptr) {
     if (game_ptr->enemy.hp == 0) {
         const int exp = game_ptr->enemy.exp_reward * (game_ptr->player.exp_boost / 10.0);
         game_ptr->player.exp += exp;

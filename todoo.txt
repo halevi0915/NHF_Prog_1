@@ -1,15 +1,14 @@
 TODO ------------------------------------------------------------------------------------------------------------------
+
 must do:
-    dokument:
-        - WIP file_handler
-        - exit codes
-        - elso oldalra még több általános dolog
-        - globalsban konstans táblázat
     color:
     visual:
     internal:
+        - laci message: globals
+        - linked list inv
+        - 
         - inventory linked list - must have - groups of orbs - stats add up - name are just "orb of fire-damage-critical chance-ect" - then no ai included
-        - learn linked list
+        - enums for func returns
 
 
 
@@ -65,17 +64,16 @@ CANCELLED ----------------------------------------------------------------------
 - write story
 - multiple characters: fire wizard, lightning wizard, earth wizard, ancient wizard
 - ancient wizard unlockable
-- use enums idk if good idea maybe later
 
 AGENDA - STANDARDS ----------------------------------------------------------------------------------------------------
 
 - funcba akkor const ha sehol se valtozik
-    nem lehet const msg, game_ptr
+    nem lehet const: msg, game_ptr
 - minden vesszo utan space: alma, alma
 - kapcsos zarojel () { helyen van
 - standard lib-eket ott import ahol kell
 - belso import adott
-- struct valahol él onnan csak pointert adsz tovabb
+- struct valahol "él" onnan csak pointert adsz tovabb
 - check for every divison if it needs (float) cast
 - struct felsorolas vegen nincs vesszo
 - a "----" mindig a 120. karakterig megy
@@ -108,6 +106,7 @@ vagy nem mivel lehet mashova nem is kell ascii art
 ha keves kell akkor lehet hardcode-olni yup
 
 INVENTORY NOTES -------------------------------------------------------------------------------------------------------
+
 - többfele item van
 - egy itembol tobb is lehet
 - player - inventory - item
@@ -158,3 +157,34 @@ epic                    20%
 legendary               5%
     charge_up 1-3
     meteor_fire 1-3
+
+DOKSI MUST HAVES ------------------------------------------------------------------------------------------------------
+
+- build command - copy from tasks.json
+- file handling - what - where - how
+- adat szerkezet - linked list - use case
+- import tree - diagramm
+- modules explain - purpose
+- structs - scope
+- game desc - items - stage - diff- enemy - player - actions
+- game loop - start trigger - run - end trigger
+- program loop - order of events - end trigger
+- visual - wrappers - draw - menus
+- exit codes - table
+- input handle - caps lock immune
+- removed pats - why
+- potential expandability - just speculation
+
+TODO BEFORE SUBMIT ----------------------------------------------------------------------------------------------------
+- balance game
+- PLAYTEST - improve enjoyability - fix annoying parts
+- remove unnecessary parts
+- comments in code
+- check agendas
+- finish the documentation - consider order of paragraphs
+- only zip the necessary parts - under 1 MB
+- organize notes - remove unnecessary - if history and no actuall info = remove
+- update readme
+- organize files
+- make public
+- maybe translate to english

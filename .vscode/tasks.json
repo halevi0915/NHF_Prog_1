@@ -10,6 +10,9 @@
                 "ncurses/pdcurses/*.c",
                 "ncurses/wincon/*.c",
                 "-Iinclude",
+                "-INcurses",
+                "-Werror",
+                "-Wall",
                 "-o",
                 "main.exe"
             ],
