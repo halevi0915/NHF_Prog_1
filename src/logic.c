@@ -36,10 +36,10 @@ char* format_string(const char* format, ...) {
     int len = vsnprintf(NULL, 0, format, args); // gets the length
     va_end(args); // cleans up in case there is an exit
 
-    if (len < 0) {printf("format error"); exit(2);} // format error -> retruns 0 for the len
+    if (len < 0) {printf("format error\n"); exit(2);} // format error -> retruns 0 for the len
 
     char* buffer = malloc(sizeof(char) * (len + 1)); // +1 for the \0
-    if (buffer == NULL) {printf("format str alloc error"); exit(1);};  // alloc error
+    if (buffer == NULL) {printf("format str alloc error\n"); exit(1);};  // alloc error
 
     va_start(args, format); // reinit args
     vsnprintf(buffer, len + 1, format, args); // does the formatting
@@ -55,7 +55,7 @@ char* bar_string(const char* text, const int current_value, const int max_value)
 
     char* buffer = malloc(sizeof(char) * (13 + text_len)); // 12 is the len of [####------] and +1 for \0
 
-    if (buffer == NULL) {printf("bar str alloc error"); exit(1);};  // alloc error
+    if (buffer == NULL) {printf("bar str alloc error\n"); exit(1);};  // alloc error
 
     // writes the vaules in
     for (int i = 0; i < text_len; ++i) {buffer[i] = text[i];}

@@ -148,10 +148,11 @@ void draw_header(Game* game_ptr) {
     side(23, "   Inventory", "", 0, 0, YELLOW);
     side(23, " <", "", 0, 0, WHITE);
 
-    int i;
-    for (i = 0; i < game_ptr->player.inventory.size; ++i) {
-        if (i % 2 == 0) side(i/2 + 25, format_string("                               - %s", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0, WHITE);
-        else side(i/2 + 25, format_string("             - %s", game_ptr->player.inventory.contents[i].name, game_ptr->player.inventory.contents[i].boost), "", 1, 0, WHITE);
+    int i = 0;
+    for (Slot* slot = game_ptr->player.inventory; slot != NULL; slot = slot->next) {
+        if (i % 2 == 0) side(i/2 + 25, format_string("                               - %s", slot->contents.name, slot->contents.boost), "", 1, 0, WHITE);
+        else side(i/2 + 25, format_string("             - %s", slot->contents.name, slot->contents.boost), "", 1, 0, WHITE);
+        ++i;
     }
 
     // enemy sector

@@ -4,17 +4,12 @@ must do:
     color:
     visual:
     internal:
-        - laci message: globals
+        - laci message: globals ask oran
         - linked list inv
-        - 
         - inventory linked list - must have - groups of orbs - stats add up - name are just "orb of fire-damage-critical chance-ect" - then no ai included
         - enums for func returns
-
-
-
         - save game sys
         - balance enemies - default player values are low (even 0) can scale with items
-        - insane comments in code
 
 optional:
     visual:
@@ -176,6 +171,7 @@ DOKSI MUST HAVES ---------------------------------------------------------------
 - potential expandability - just speculation
 
 TODO BEFORE SUBMIT ----------------------------------------------------------------------------------------------------
+
 - balance game
 - PLAYTEST - improve enjoyability - fix annoying parts
 - remove unnecessary parts

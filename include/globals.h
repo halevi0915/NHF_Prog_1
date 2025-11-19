@@ -65,10 +65,10 @@ typedef struct Item {
     int boost;
 } Item;
 
-typedef struct Inventory {
-    int size;
-    Item* contents;
-} Inventory;
+typedef struct Slot {
+    struct Slot* next;
+    Item contents;
+} Slot;
 
 typedef struct Player {
     char name[20];
@@ -77,7 +77,7 @@ typedef struct Player {
     int next_level_exp;
     int exp_boost;          // id 0
     int heal_potion;        // id 1
-    Inventory inventory;
+    Slot* inventory;
 
     int max_hp;             // id 2
     int hp;
@@ -140,14 +140,5 @@ extern const ItemBase common_items[];
 extern const ItemBase rare_items[];
 extern const ItemBase epic_items[];
 extern const ItemBase legendary_items[];
-
-// extern const char* zap_msg[];
-// extern const char* charge_msg[];
-// extern const char* meteor_msg[];
-// extern const char* heal_msg[];
-// extern const char* rest_msg[];
-// const char* burn_msg[];
-// const char* enemy_atk_msg[];
-// const char* enemy_heal_msg[];
 
 #endif

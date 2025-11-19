@@ -11,6 +11,15 @@
 #include "logic.h"
 #include "globals.h"
 
+void free_inventory(Game* game_ptr) {
+    Slot* iter = game_ptr->player.inventory;
+    while (iter != NULL) {
+        Slot* kov = iter->next;
+        free(iter);
+        iter = kov;
+    }
+}
+
 void scale_enemy(Game* game_ptr) {
     game_ptr->enemy.max_hp *= game_ptr->diff;
     game_ptr->enemy.hp = game_ptr->enemy.max_hp;
@@ -46,11 +55,6 @@ void generate_enemy(Game* game_ptr) {
 Game create_new_game() {
     float diff = diff_menu();
 
-    Inventory new_inventory = {
-        .size = 0,
-        .contents = NULL
-    };
-
     Player new_player = {
         .name = "Wizard",
         .lvl = 1,
@@ -58,7 +62,7 @@ Game create_new_game() {
         .next_level_exp = exp_scale,
         .exp_boost = 10,
         .heal_potion = 3,
-        .inventory = new_inventory,
+        .inventory = NULL,
 
         .max_hp = 100,
         .hp = 100,
@@ -131,10 +135,17 @@ Item genetrate_item(Game* game_ptr) {
 }
 
 char* add_item(Game* game_ptr, const Item item) {
-    game_ptr->player.inventory.size++;
-    game_ptr->player.inventory.contents = realloc(game_ptr->player.inventory.contents, game_ptr->player.inventory.size * sizeof(Item));
-    if (game_ptr->player.inventory.contents == NULL) {printf("inv realloc error"); exit(1);}
-    game_ptr->player.inventory.contents[game_ptr->player.inventory.size-1] = item;
+    Slot* new_slot = (Slot*)malloc(sizeof(Slot));
+    if (new_slot == NULL) {printf("slot alloc error\n"); exit(1);}
+    new_slot->next = NULL;
+    new_slot->contents = item;
+
+    Slot* end_finder = game_ptr->player.inventory;
+    if (end_finder == NULL) game_ptr->player.inventory = new_slot;
+    else {
+        while (end_finder->next != NULL) end_finder = end_finder->next;
+        end_finder->next = new_slot;
+    }
 
     switch (item.stat_id) {
         case exp_boost: game_ptr->player.exp_boost += item.boost; break;
@@ -360,5 +371,5 @@ void game_loop(Game* game_ptr) {
             game_ptr->turn = 1;
         }
     }
-    free(game_ptr->player.inventory.contents);
+    free_inventory(game_ptr);
 }
