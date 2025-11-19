@@ -52,7 +52,7 @@ void generate_enemy(Game* game_ptr) {
     scale_enemy(game_ptr);
 }
 
-Game create_new_game() {
+void create_new_game(Game* game_ptr) {
     float diff = diff_menu();
 
     Player new_player = {
@@ -60,9 +60,11 @@ Game create_new_game() {
         .lvl = 1,
         .exp = 0,
         .next_level_exp = exp_scale,
+        .inventory = NULL,
+        .item_count = 0,
+
         .exp_boost = 10,
         .heal_potion = 3,
-        .inventory = NULL,
 
         .max_hp = 100,
         .hp = 100,
@@ -99,8 +101,8 @@ Game create_new_game() {
         .enemy_index = 0,
         .diff = diff
     };
-    scale_enemy(&new_game);
-    return new_game;
+    *game_ptr = new_game;
+    scale_enemy(game_ptr);
 }
 
 Item genetrate_item(Game* game_ptr) {
@@ -146,6 +148,7 @@ char* add_item(Game* game_ptr, const Item item) {
         while (end_finder->next != NULL) end_finder = end_finder->next;
         end_finder->next = new_slot;
     }
+    game_ptr->player.item_count++;
 
     switch (item.stat_id) {
         case exp_boost: game_ptr->player.exp_boost += item.boost; break;
@@ -358,7 +361,7 @@ void game_loop(Game* game_ptr) {
             switch (player_turn(game_ptr)) {
                 case 0: game_ptr->turn = 0; break;
                 case 1:
-                    //save_game(game_ptr);
+                    save_game(game_ptr, save_name);
                     break;
                 case 2: game_running = 0; break;
             };

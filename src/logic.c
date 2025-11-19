@@ -66,3 +66,49 @@ char* bar_string(const char* text, const int current_value, const int max_value)
 
     return buffer;
 }
+
+void save_game(Game* game_ptr, const char* filename) {
+    FILE* f = fopen(filename, "wb");
+    if (!f) {perror("save open error"); exit(3);}
+
+    fwrite(game_ptr, sizeof(Game), 1, f);
+
+    Slot* item = game_ptr->player.inventory;
+    while (item != NULL) {
+        fwrite(&item->contents, sizeof(Item), 1, f);
+        item = item->next;
+    }
+    fclose(f);
+}
+
+bool load_game(Game* game_ptr, const char* filename) {
+    FILE* f = fopen(filename, "rb");
+    if (!f) {perror("load open error"); exit(3);}
+
+    fread(game_ptr, sizeof(Game), 1, f);
+
+    game_ptr->player.inventory = NULL;
+    for (int i = 0; i < game_ptr->player.item_count; i++) {
+        Item item;
+        fread(&item, sizeof(Item), 1, f);
+
+        Slot* new_slot = (Slot*)malloc(sizeof(Slot));
+        new_slot->contents = item;
+        new_slot->next = NULL;
+
+        Slot* end_finder = game_ptr->player.inventory;
+        if (end_finder == NULL) game_ptr->player.inventory = new_slot;
+        else {
+            while (end_finder->next != NULL) end_finder = end_finder->next;
+            end_finder->next = new_slot;
+        }
+    }
+    fclose(f);
+    return true;
+}
+
+bool save_exists(const char* file_name) {
+    FILE* f = fopen(file_name, "rb");
+    if (f) {fclose(f); return true;}
+    return false;
+}

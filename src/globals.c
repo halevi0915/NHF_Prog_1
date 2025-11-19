@@ -6,6 +6,7 @@ const float easy_diff_mult = 1.0;
 const float normal_diff_mult = 1.5;
 const float hard_diff_mult = 2.0;
 const float diff_scale = 1.5;
+const char save_name[] = "save.game";
 
 const int stage_count = 3;
 const int enemy_per_stage = 4;

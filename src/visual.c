@@ -186,7 +186,7 @@ typedef void (*draw_game)(const int* x, Game* game_ptr);
 typedef void (*draw_msg)(char* msg, const int is_dynamic, Game* game_ptr);
 typedef void (*draw_item)(const int* x, const Item* items, Game* game_ptr);
 
-// clear - draw base - refresh combo
+// clear - draw base - refresh
 void menu_wrapper(draw_menu func, const int* x) {
     clear();
     draw_base();

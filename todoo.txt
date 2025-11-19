@@ -4,6 +4,7 @@ must do:
     color:
     visual:
     internal:
+        - fprint helyett perror
         - laci message: globals ask oran
         - linked list inv
         - inventory linked list - must have - groups of orbs - stats add up - name are just "orb of fire-damage-critical chance-ect" - then no ai included
@@ -168,7 +169,7 @@ DOKSI MUST HAVES ---------------------------------------------------------------
 - exit codes - table
 - input handle - caps lock immune
 - removed pats - why
-- potential expandability - just speculation
+- potential expandability - just speculation - version in save - save slots
 
 TODO BEFORE SUBMIT ----------------------------------------------------------------------------------------------------
 

@@ -6,6 +6,7 @@ extern const float easy_diff_mult;
 extern const float normal_diff_mult;
 extern const float hard_diff_mult;
 extern const float diff_scale;
+extern const char save_name[];
 
 extern const int stage_count;
 extern const int enemy_per_stage;
@@ -75,9 +76,11 @@ typedef struct Player {
     int lvl;
     int exp;
     int next_level_exp;
+    Slot* inventory;
+    int item_count;
+
     int exp_boost;          // id 0
     int heal_potion;        // id 1
-    Slot* inventory;
 
     int max_hp;             // id 2
     int hp;
