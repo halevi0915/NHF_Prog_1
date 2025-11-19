@@ -138,7 +138,7 @@ Item genetrate_item(Game* game_ptr) {
 
 char* add_item(Game* game_ptr, const Item item) {
     Slot* new_slot = (Slot*)malloc(sizeof(Slot));
-    if (new_slot == NULL) {printf("slot alloc error\n"); exit(1);}
+    if (new_slot == NULL) {perror("slot alloc error"); exit(1);}
     new_slot->next = NULL;
     new_slot->contents = item;
 

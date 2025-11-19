@@ -24,7 +24,7 @@ int main() {
     srand(time(NULL));
     int program_running = 1;
     Game* game_ptr = (Game*)malloc(sizeof(Game));
-    if (game_ptr == NULL) {printf("game_ptr alloc error\n"); exit(1);};
+    if (game_ptr == NULL) {perror("game_ptr alloc error"); exit(1);};
 
     while (program_running) {
         switch (main_menu()) {  // 0: start_game 1: load_game 2: quit_game

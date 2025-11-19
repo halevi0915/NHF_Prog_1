@@ -6,10 +6,7 @@ must do:
     internal:
         - fprint helyett perror
         - laci message: globals ask oran
-        - linked list inv
-        - inventory linked list - must have - groups of orbs - stats add up - name are just "orb of fire-damage-critical chance-ect" - then no ai included
         - enums for func returns
-        - save game sys
         - balance enemies - default player values are low (even 0) can scale with items
 
 optional:
@@ -25,6 +22,8 @@ optional:
 
 DONE ------------------------------------------------------------------------------------------------------------------
 
+- save game sys
+- linked list inv
 - colored text - side - middle
 - remove duplicate items
 - wrap items
@@ -166,7 +165,7 @@ DOKSI MUST HAVES ---------------------------------------------------------------
 - game loop - start trigger - run - end trigger
 - program loop - order of events - end trigger
 - visual - wrappers - draw - menus
-- exit codes - table
+- exit codes - table - alloc error 1 - format error 2 - open error 3 - read error 4 - write error 5 
 - input handle - caps lock immune
 - removed pats - why
 - potential expandability - just speculation - version in save - save slots
