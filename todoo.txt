@@ -1,14 +1,21 @@
 TODO ------------------------------------------------------------------------------------------------------------------
 
 must do:
+    settings:
+        - generate_enemy: stage count diff_scale enemies bosses
+        - enemy_status: fire_dmg
     color:
     visual:
     internal:
         - github visszateker from this madness todo marad
         - globas a lok helyre
         - separate game.c? lots of things there
-        - setting from file
+        - settings from file
         - laci message: globals
+
+        - create game dosent make a new enemy - call generate after
+        - generate enemy dosent sace it - call scale after
+
         - enums for func returns
 
         - message for no saved game detected
