@@ -4,9 +4,15 @@ must do:
     color:
     visual:
     internal:
-        - fprint helyett perror
-        - laci message: globals ask oran
+        - github visszateker from this madness todo marad
+        - globas a lok helyre
+        - separate game.c? lots of things there
+        - setting from file
+        - laci message: globals
         - enums for func returns
+
+        - message for no saved game detected
+        - message for successful save and load
         - balance enemies - default player values are low (even 0) can scale with items
 
 optional:
@@ -22,6 +28,7 @@ optional:
 
 DONE ------------------------------------------------------------------------------------------------------------------
 
+- fprint helyett perror
 - save game sys
 - linked list inv
 - colored text - side - middle
