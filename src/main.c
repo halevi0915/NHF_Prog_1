@@ -12,12 +12,13 @@
 
 // main modul:
 //     - inicializálja a megjelenítést: init_screen()
+//     - lefoglal egy game strukturát és majd abba tölti az új/betöltött game-et
 //     - addig futtat egy loop-ot amig a felhasználó nem lép ki: program_running = quit_menu()
 //     - a loopban a főmenü visszatérési értéke alapján:
 //         - létrehoz egy új játékot és elindítja azt
-//         - (WIP) betölt egy mentést és elindítja azt
+//         - betölt egy mentést és elindítja azt
 //         - meghívja a kilépés menüt amiben ha a felhasználó yes-t választ, kilép a loop-bol
-//     - a végén a megjelenítést be kell fejezni: endwin()
+//     - megjelenítést be kell fejezni: endwin()
 
 int main() {
     init_screen();
@@ -42,8 +43,6 @@ int main() {
             case 2: program_running = quit_menu(); break; // 0: yes 1: no 
         }
     }
-    //printf("%d malloc\n", malloc_counter);
-    //printf("%d free\n", free_counter);
     free(game_ptr);
     endwin();
     return 0;

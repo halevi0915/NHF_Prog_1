@@ -131,17 +131,4 @@ typedef struct Game {
     float diff;
 } Game;
 
-extern const Enemy forest_enemies[];
-extern const Enemy cave_enemies[];
-extern const Enemy castle_enemies[];
-
-extern const Enemy forest_boss;
-extern const Enemy cave_boss;
-extern const Enemy castle_boss;
-
-extern const ItemBase common_items[];
-extern const ItemBase rare_items[];
-extern const ItemBase epic_items[];
-extern const ItemBase legendary_items[];
-
 #endif

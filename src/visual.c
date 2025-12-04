@@ -65,21 +65,21 @@ void line(const int row) {
 // az adott sor közepére irja az msg-t
 void middle(const int row, char* msg, const int is_dynamic, const Colors color) {
     int msg_len = strlen(msg);
-    int x_pos = (WIDTH / 2) - (msg_len / 2);
+    int x_pos = (WIDTH / 2) - (msg_len / 2); // middle pos minus half of the msg len
 
-    attron(COLOR_PAIR(color));
-    mvprintw(row, x_pos, "%s", msg);
-    attron(COLOR_PAIR(WHITE));
-    if (is_dynamic) free(msg);
+    attron(COLOR_PAIR(color)); // selects the color
+    mvprintw(row, x_pos, "%s", msg); // out
+    attron(COLOR_PAIR(WHITE)); // resets the color
+    if (is_dynamic) free(msg); // if dynamic: free the formatted str
 }
 
 // az adott sor két szélére irja a két msg-t (ha csak egyik oldalra irunk a masik ures)
 void side(const int row, char* msg_1, char* msg_2, const int is_dynamic_1, const int is_dynamic_2, const Colors color) {
-    attron(COLOR_PAIR(color));
-    mvprintw(row, 3, "%s", msg_1);                              // 3-al beljebb a draw_base elferese miatt
+    attron(COLOR_PAIR(color)); // selects color
+    mvprintw(row, 3, "%s", msg_1);                              // 3-al beljebb a draw_base kerete miatt
     mvprintw(row, WIDTH - (3 + strlen(msg_2)), "%s", msg_2);    // es WIDTH - 3
-    attron(COLOR_PAIR(WHITE));
-    if (is_dynamic_1) free(msg_1);
+    attron(COLOR_PAIR(WHITE)); // resert color
+    if (is_dynamic_1) free(msg_1); // if dynamic: free the formatted str
     if (is_dynamic_2) free(msg_2);
 }
 
@@ -93,9 +93,9 @@ void draw_base() {
     line(HEIGHT - 2);
 }
 
-// megrajzolja az alap kinézetet - statok
+// megrajzolja az alap kinézetet - statok/adatok
 void draw_header(Game* game_ptr) {
-    char sector_separator_left[WIDTH / 3 + 1 - 2]; // -2 adjusting / cuz border
+    char sector_separator_left[WIDTH / 3 + 1 - 2]; // -2 adjusting / because braw_base border
     char sector_separator_right[WIDTH / 3 + 1 - 2];
     char sector_line_left[WIDTH / 3 + 1 - 2];
     char sector_line_right[WIDTH / 3 + 1 - 2];
@@ -118,7 +118,10 @@ void draw_header(Game* game_ptr) {
 
     for (int i = 2; i < HEIGHT - 9; ++i) {side(i, sector_separator_left, sector_separator_right, 0, 0, WHITE);}
 
-    // player sector
+    // PLAYER SECTOR
+    //  - left side of the screen
+    //  - player stats, player inventory
+    // spell description is in the game_action_draw not here
     side(3, format_string(" LVL %d  < %s >", game_ptr->player.lvl, game_ptr->player.name), "", 1, 0, YELLOW);
     side(4, sector_line_left, sector_line_right, 0, 0, WHITE);
 
@@ -155,7 +158,9 @@ void draw_header(Game* game_ptr) {
         ++i;
     }
 
-    // enemy sector
+    // ENEMY SECTOR
+    //  - right side of the screen
+    //  - enemy stats
     if (game_ptr->enemy.hp == 0) side(3, "", format_string("Dead - < %s > ", game_ptr->enemy.name), 0, 1, RED);
     else if (game_ptr->enemy.stun == 1) side(3, "", format_string("Stunned - < %s > ", game_ptr->enemy.name), 0, 1, RED);
     else if (game_ptr->enemy.fire > 0) side(3, "", format_string("Burning - < %s > ", game_ptr->enemy.name), 0, 1, RED);
@@ -169,7 +174,9 @@ void draw_header(Game* game_ptr) {
 
     side(9, "", sector_line_right, 0, 0, WHITE);
 
-    // middle sector
+    // MIDDLE SECTOR
+    //  - middle part of the screen
+    //  - generic info
     middle(3, format_string("Stage: %d", game_ptr->stage+1), 1, RED);
     middle(4, format_string("Difficulty: %.2fx", game_ptr->diff), 1, RED);
     middle(5, format_string("Boss in %d!", enemy_per_stage - game_ptr->enemy_index + 1), 1, RED);
@@ -180,13 +187,16 @@ void draw_header(Game* game_ptr) {
 }   
 
 // WRAPPERS -----------------------------------------------------------------------------------------------------------
+// dose the neccessary steps before and after every draw: clear, draw the base, after draw: refresh the screen
+// pass the given input to the draw
 
+// nameless dummy draw function templates
 typedef void (*draw_menu)(const int* x);
 typedef void (*draw_game)(const int* x, Game* game_ptr);
 typedef void (*draw_msg)(char* msg, const int is_dynamic, Game* game_ptr);
 typedef void (*draw_item)(const int* x, const Item* items, Game* game_ptr);
 
-// clear - draw base - refresh
+
 void menu_wrapper(draw_menu func, const int* x) {
     clear();
     draw_base();
@@ -219,6 +229,8 @@ void item_wrapper(draw_item func, const int* x, const Item* items, Game* game_pt
 }
 
 // MENU DRAW ----------------------------------------------------------------------------------------------------------
+// each draw menu gets a draw controll x value: its beetwheen 0 and the amount of options -1
+// this way the draw can tell which option is selected and draw accordingly
 
 void main_menu_draw(const int* x) {
     middle(5,  "       _                                            __   _______ _           __          ___                  _ ", 0, RED);
@@ -579,7 +591,12 @@ void game_item_draw(const int* x, const Item* items, Game* game_ptr) {
     }
 }
 
-// MENUS --------------------------------------------------------------------------------------------------------------
+// MENUS CONRTOLL -----------------------------------------------------------------------------------------------------
+// core is the draw contoll x value: 
+//  - w,s can add or sub from it but keeping it in the 0 - option_amount-1 range or (x % option_count)
+// gives x to the draw func through a wrapper 
+// checks for input until enter is pressed: returns the selected option
+// functions separated for expandability (they are mostly the same)
 
 int main_menu() {
     int x = 0;

@@ -2,39 +2,18 @@ TODO ---------------------------------------------------------------------------
 
 must do:
     settings:
-        - generate_enemy: stage count diff_scale enemies bosses
-        - enemy_status: fire_dmg
     color:
     visual:
     internal:
-        - github visszateker from this madness todo marad
-        - globas a lok helyre
-        - separate game.c? lots of things there
-        - settings from file
-        - laci message: globals
-
-        - create game dosent make a new enemy - call generate after
-        - generate enemy dosent sace it - call scale after
-
-        - enums for func returns
-
-        - message for no saved game detected
-        - message for successful save and load
         - balance enemies - default player values are low (even 0) can scale with items
 
 optional:
     visual:
-        - side note: can have full white space with white background 
-        - can change name?
-        - transition screen when new stage
-        - transition screen when saving like save completed or smth
     internal:
-        - if more states more characters -- more items
-        - +status confuse - miss ch, poison - less dmg more stacks
-        - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
 
 DONE ------------------------------------------------------------------------------------------------------------------
 
+- presets from global to static
 - fprint helyett perror
 - save game sys
 - linked list inv
@@ -67,7 +46,6 @@ CANCELLED ----------------------------------------------------------------------
 - look at funcs to make smaller scope inputs (dont need game_ptr) naah
 - random ability texts in global and just meteor_text[randint(x,y)] ai generated only spells - cancelled cuz because
 - pause menu stats: pause menu doesnt have access to game_ptr
-- colored text
 - text animation??? nope
 - menu for lores
 - write story
@@ -182,7 +160,19 @@ DOKSI MUST HAVES ---------------------------------------------------------------
 - exit codes - table - alloc error 1 - format error 2 - open error 3 - read error 4 - write error 5 
 - input handle - caps lock immune
 - removed pats - why
-- potential expandability - just speculation - version in save - save slots
+- potential expandability - just speculation
+    - version in save
+    - save slots
+    - global setting from file
+    - enemies, items from file
+    - message for no saved game detected
+    - message for successful save and load
+    - name change
+    - transition screen when new stage
+    - more characters
+    - characters specific items
+    - more status effects confuse - miss ch, poison - less dmg but more stacks
+    - infinite mode - unlocked when story is beaten - random stage - xp mult - diff mult
 
 TODO BEFORE SUBMIT ----------------------------------------------------------------------------------------------------
 

@@ -11,6 +11,7 @@
 #include "logic.h"
 #include "globals.h"
 
+// linked list free
 void free_inventory(Game* game_ptr) {
     Slot* iter = game_ptr->player.inventory;
     while (iter != NULL) {
@@ -20,16 +21,172 @@ void free_inventory(Game* game_ptr) {
     }
 }
 
+// boosts current enemy stats by diff
 void scale_enemy(Game* game_ptr) {
     game_ptr->enemy.max_hp *= game_ptr->diff;
     game_ptr->enemy.hp = game_ptr->enemy.max_hp;
-    game_ptr->enemy.armor *= game_ptr->diff;
     game_ptr->enemy.crit_ch = min(game_ptr->enemy.crit_ch * game_ptr->diff, 100);
     game_ptr->enemy.crit_dmg *= game_ptr->diff;
     game_ptr->enemy.exp_reward *= game_ptr->diff;
 }
 
+// enemy_per_stage enemy then boss: if boss -> +difficulty +new stage +enemy_index
+// enemy_index is a counter for the current stage enemies
+// chooses randomly from the appropriate stage
+// scales the enemy as well
 void generate_enemy(Game* game_ptr) {
+
+    // FOREST ENEMIES -----------------------------------------------------------------------------------------------------
+    static const Enemy forest_enemies[] = {
+    {
+        .name = "Slime",
+        .dmg = 2,
+        .max_hp = 10,
+        .armor = 0,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 10,
+    },
+    {
+        .name = "Wolf",
+        .dmg = 7,
+        .max_hp = 35,
+        .armor = 5,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 15,
+    },
+    {
+        .name = "Sapling",
+        .dmg = 3,
+        .max_hp = 50,
+        .armor = 15,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 15,
+    },
+    {
+        .name = "Forest Elf",
+        .dmg = 10,
+        .max_hp = 80,
+        .armor = 5,
+        .crit_ch = 10,
+        .crit_dmg = 20,
+        .exp_reward = 30,
+    }
+    };
+
+    // CAVE ENEMIES -------------------------------------------------------------------------------------------------------
+    static const Enemy cave_enemies[] = {
+    {
+        .name = "Zombie",
+        .dmg = 8,
+        .max_hp = 120,
+        .armor = 8,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 40,
+    },
+    {
+        .name = "Skeleton",
+        .dmg = 12,
+        .max_hp = 80,
+        .armor = 10,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 40, 
+    },
+    {
+        .name = "Spider",
+        .dmg = 4,
+        .max_hp = 60,
+        .armor = 0,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 30,
+    },
+    {
+        .name = "Goblin",
+        .dmg = 3,
+        .max_hp = 30,
+        .armor = 10,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 20,
+    }
+    };
+
+    // CASTLE ENEMIES -----------------------------------------------------------------------------------------------------
+    static const Enemy castle_enemies[] = {
+    {
+        .name = "Cursed Knight",
+        .dmg = 20,
+        .max_hp = 200,
+        .armor = 10,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 100,
+    },
+    {
+        .name = "Necromancer",
+        .dmg = 5,
+        .max_hp = 50,
+        .armor = 10,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 60,
+    },
+    {
+        .name = "Cultist",
+        .dmg = 15,
+        .max_hp = 100,
+        .armor = 10,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 80,
+    },
+    {
+        .name = "Sorcerer",
+        .dmg = 25,
+        .max_hp = 70,
+        .armor = 10,
+        .crit_ch = 10,
+        .crit_dmg = 15,
+        .exp_reward = 120,
+    }
+    };
+
+    // BOSSES -------------------------------------------------------------------------------------------------------------
+    static const Enemy forest_boss = {
+        .name = "Fire Dragon",
+        .dmg = 15,
+        .max_hp = 200,
+        .armor = 30,
+        .crit_ch = 25,
+        .crit_dmg = 25,
+        .exp_reward = 300,
+    };
+
+    static const Enemy cave_boss = {
+        .name = "Stone Guardian",
+        .dmg = 10,
+        .max_hp = 1000,
+        .armor = 20,
+        .crit_ch = 1,
+        .crit_dmg = 100,
+        .exp_reward = 500,
+    };
+
+    static const Enemy castle_boss = {
+        .name = "Evil Wizard",
+        .dmg = 30,
+        .max_hp = 500,
+        .armor = 30,
+        .crit_ch = 30,
+        .crit_dmg = 50,
+        .exp_reward = 1000,
+    };
+
     Enemy new_enemy;
     if (game_ptr->enemy_index == enemy_per_stage) {
         switch (game_ptr->stage % stage_count) {
@@ -52,6 +209,10 @@ void generate_enemy(Game* game_ptr) {
     scale_enemy(game_ptr);
 }
 
+// difficulty -> diff menu
+// preset default player
+// generates an enemy and scales it
+// puts the new game struct into the given ptr
 void create_new_game(Game* game_ptr) {
     float diff = diff_menu();
 
@@ -68,44 +229,178 @@ void create_new_game(Game* game_ptr) {
 
         .max_hp = 100,
         .hp = 100,
-        .heal_amount = 30,
+        .heal_amount = 50,
 
         .max_mana = 200,
         .mana = 200,
-        .rest_amount = 30,
+        .rest_amount = 50,
         
         .armor = 10,
         .crit_ch = 10,
-        .crit_dmg = 12,
+        .crit_dmg = 15,
         .miss_ch = 5,
         .dodge_ch = 10,
 
-        .zap_cost = 20,
-        .zap_dmg = 10,
+        .zap_cost = 10,
+        .zap_dmg = 20,
         .zap_stun_ch = 10,
 
-        .charge_cost = 40,
+        .charge_cost = 20,
         .charge_up = 1,
         .current_charge = 0,
 
-        .meteor_cost = 100,
-        .meteor_dmg = 50,
+        .meteor_cost = 50,
+        .meteor_dmg = 30,
         .meteor_fire = 1
     };
 
     Game new_game = {
         .player = new_player,
-        .enemy = forest_enemies[0],
         .turn = randint(0,1),
         .stage = 0,
         .enemy_index = 0,
         .diff = diff
     };
     *game_ptr = new_game;
+    generate_enemy(game_ptr);
     scale_enemy(game_ptr);
 }
 
+// random rng for rarity 
+// chooses randomly from the appropriate rarity
+// rarity chances are hardcoded
+// item_good -> stats cant go past the limit: if stat is at the limit -> roll another item
+// generate Item from ItemBase -> generate random stat beetwheen the min and max
 Item genetrate_item(Game* game_ptr) {
+
+    // ITEMS --------------------------------------------------------------------------------------------------------------
+
+    static const ItemBase common_items[] = {
+    {
+        .name = "Heart Band",
+        .stat_id = max_hp,
+        .boost_min = 10,
+        .boost_max = 30,
+    },
+    {
+        .name = "Mana Ring",
+        .stat_id = max_mana,
+        .boost_min = 20,
+        .boost_max = 60,
+    },
+    {
+        .name = "Iron Guard",
+        .stat_id = armor,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Sharp Eye",
+        .stat_id = crit_ch,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Ruin Blade",
+        .stat_id = crit_dmg,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Thunder Wand",
+        .stat_id = zap_dmg,
+        .boost_min = 5,
+        .boost_max = 15,
+    },
+    {
+        .name = "Heal Flask",
+        .stat_id = heal_potion,
+        .boost_min = 1,
+        .boost_max = 3,
+    }
+    };
+
+    static const ItemBase rare_items[] = {
+    {
+        .name = "Wisdom Charm",
+        .stat_id = exp_boost,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Blur Veil",
+        .stat_id = miss_ch,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Spark Seal",
+        .stat_id = zap_cost,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Quick Rune",
+        .stat_id = charge_cost,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Regen Tonic",
+        .stat_id = heal_amount,
+        .boost_min = 15,
+        .boost_max = 35,
+    },
+    {
+        .name = "Peace Pendant",
+        .stat_id = rest_amount,
+        .boost_min = 25,
+        .boost_max = 65,
+    }
+    };
+
+    static const ItemBase epic_items[] = {
+    {
+        .name = "Swift Boots", 
+        .stat_id = dodge_ch,
+        .boost_min = 5,
+        .boost_max = 15,
+    },
+    {
+        .name = "Shock Rod",
+        .stat_id = zap_stun_ch,
+        .boost_min = 1,
+        .boost_max = 5,
+    },
+    {
+        .name = "Star Staff",
+        .stat_id = meteor_cost,
+        .boost_min = 5,
+        .boost_max = 15,
+    },
+    {
+        .name = "Fury Core",
+        .stat_id = meteor_dmg,
+        .boost_min = 5,
+        .boost_max = 10,
+    }
+    };
+
+    static const ItemBase legendary_items[] = {
+    {
+        .name = "Focus Gem",
+        .stat_id = charge_up,
+        .boost_min = 1,
+        .boost_max = 3,
+    },
+    {
+        .name = "Inferno Orb",
+        .stat_id = meteor_fire,
+        .boost_min = 1,
+        .boost_max = 3,
+    }
+    };
+
     int rng;
     ItemBase new_item_base;
     bool item_good;
@@ -136,6 +431,12 @@ Item genetrate_item(Game* game_ptr) {
     return new_item;
 }
 
+// linked list: starting ptr is stored in the player struct
+// slot is the linked list element
+// generates new slot with the input item
+// appends it to the end
+// adds the itemstat to the player stat with a limit to the stat
+// RETURNS A FORMATTED STR about the new item
 char* add_item(Game* game_ptr, const Item item) {
     Slot* new_slot = (Slot*)malloc(sizeof(Slot));
     if (new_slot == NULL) {perror("slot alloc error"); exit(1);}
@@ -174,6 +475,15 @@ char* add_item(Game* game_ptr, const Item item) {
     return format_string("New item: %s!", item.name, item.boost);
 }
 
+// spell No.1 ZAP
+// subtract mana cost
+// increased dmg based on current_charge
+// calculate dmg based on enemy.armor
+// can miss -> miss_ch: mana and charge still gets taken away
+// normal hit can stun -> stun_ch
+// can crit -> crit_ch: increased dmg, guaranteed stun
+// stun: if stunned makes the enemy skip a turn
+// RETURNS A FORMATTED STR about the result
 char* zap(Game* game_ptr) {
     game_ptr->player.mana -= game_ptr->player.zap_cost;
     int dmg = game_ptr->player.zap_dmg * max(game_ptr->player.current_charge * charge_mult, 1) * (1 - (game_ptr->enemy.armor / 100.0));
@@ -194,6 +504,12 @@ char* zap(Game* game_ptr) {
     return format_string("Zap hits! (%d dmg)", dmg);
 }
 
+// spell No.2 OVERCHARGE
+// subtract mana cost
+// can miss -> miss_ch: mana still gets taken away
+// can crit -> gives more charge
+// charge is added to the player.current_charge: makes the next cast more powerful
+// RETURNS A FORMATTED STR about the result
 char* charge(Game* game_ptr) {
     game_ptr->player.mana -= game_ptr->player.charge_cost;
     if (calc_chance(game_ptr->player.miss_ch)) return format_string("Charge failed! (%d%%)", game_ptr->player.miss_ch);
@@ -205,6 +521,14 @@ char* charge(Game* game_ptr) {
     return format_string("Charge successful! (+%dx)", game_ptr->player.charge_up);
 }
 
+// spell No.3 METEOR SHOWER
+// subtract mana cost
+// increased dmg and fire_stacks based on current_charge
+// calculate dmg based on enemy.armor
+// can miss -> miss_ch: mana and charge still gets taken away
+// applies fire stacks to the enemy: gets burn dmg each turn
+// can crit -> crit_ch: increased dmg, more fire stacks
+// RETURNS A FORMATTED STR about the result
 char* meteor(Game* game_ptr) {
     game_ptr->player.mana -= game_ptr->player.meteor_cost;
     int dmg = game_ptr->player.meteor_dmg * max(game_ptr->player.current_charge * charge_mult, 1) * (1 - (game_ptr->enemy.armor / 100.0));
@@ -224,17 +548,28 @@ char* meteor(Game* game_ptr) {
     return format_string("Meteor hits! (%d dmg - %d fire)", dmg, fire);
 }
 
+// heals the player
+// RETURNS A FORMATTED STR about the result
 char* player_heal(Game* game_ptr) {
     game_ptr->player.hp = min(game_ptr->player.hp + game_ptr->player.heal_amount, game_ptr->player.max_hp);
     game_ptr->player.heal_potion -= 1;
     return format_string("You healed (+%d hp)", game_ptr->player.heal_amount);
 }
 
+// restores mana to the player
+// RETURNS A FORMATTED STR about the result
 char* player_rest(Game* game_ptr) {
     game_ptr->player.mana = min(game_ptr->player.mana + game_ptr->player.rest_amount, game_ptr->player.max_mana);
     return format_string("You rested (+%d mana)", game_ptr->player.rest_amount);
 }
 
+
+// two types of action: one end the turn and the second dosent: turn_running
+// calls game_action menu: player can choose an action or pause
+// if paused: wait for result and if quit/save was choosen: return with the value: game loop handes the quit/save
+// other action: checks mana, heal_potion
+// call the action function: display the result formatted str game_msg()
+// update the turn_running
 int player_turn(Game* game_ptr) {
     int turn_running = 1;
     int pause_result;
@@ -281,6 +616,14 @@ int player_turn(Game* game_ptr) {
     return 0; 
 }
 
+// enemy ai
+// if stunned skip turn
+// if enemy.hp is below enemy_heal_threshold: heal else attack
+// heal: enemy_heal_amount scaled by diff
+// attack: calculate dmg -> player.armor
+// can miss -> player.dodge_ch
+// can crit -> crit_ch: increased dmg
+// display the result formatted str game_msg()
 void enemy_turn (Game* game_ptr) {
     if (game_ptr->enemy.stun == 1) {
         game_ptr->enemy.stun = 0;
@@ -302,10 +645,12 @@ void enemy_turn (Game* game_ptr) {
     }
 }
 
+// there is no enemy that applies status (fire) to the player
 // void player_status(Game* game_ptr) {
-//     // no need for now
+//
 // }
 
+// if enemy is on fire: apply the dmg and decrease the fire
 void enemy_status(Game* game_ptr) {
     if (game_ptr->enemy.fire > 0) {
         game_ptr->enemy.hp = max(game_ptr->enemy.hp - fire_dmg, 0);
@@ -314,6 +659,12 @@ void enemy_status(Game* game_ptr) {
     }
 }
 
+// checks if the enemy is dead
+// if yes: give xp scaled by diff
+// check if next lvl is reached: generate 3 items and call game_item menu:
+// player chooses 1 from the 3
+// add the item to the inventory
+// generate new enemny
 void enemy_death(Game* game_ptr) {
     if (game_ptr->enemy.hp == 0) {
         const int exp = game_ptr->enemy.exp_reward * (game_ptr->player.exp_boost / 10.0);
@@ -347,11 +698,17 @@ void enemy_death(Game* game_ptr) {
     }
 }
 
+// if player dead return 1: ends the game loop
 int player_death(Game* game_ptr) {
     if (game_ptr->player.hp == 0) {game_over(game_ptr); return 0;}
     return 1;
 }
 
+// while the game is running
+// cycle beetwheen turns 0: enemy 1: player
+// player turn: call player_turn: quit/save if needed, check if enemy is dead after the player turn
+// enemy turn: check status->check if dead, call enemy turn->check if player is dead
+// if the loop ends free the linked list
 void game_loop(Game* game_ptr) {
     int game_running = 1;
     while (game_running) {    

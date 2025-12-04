@@ -67,32 +67,37 @@ char* bar_string(const char* text, const int current_value, const int max_value)
     return buffer;
 }
 
+// save the game state info into a binary file
 void save_game(Game* game_ptr, const char* filename) {
     FILE* f = fopen(filename, "wb");
-    if (!f) {perror("save_game open error"); exit(3);}
+    if (!f) {perror("save_game open error"); exit(3);} // open error
 
-    if (fwrite(game_ptr, sizeof(Game), 1, f) != 1) {perror("save_game write error"); fclose(f); exit(5);}
+    // writes the game struct
+    if (fwrite(game_ptr, sizeof(Game), 1, f) != 1) {perror("save_game write error"); fclose(f); exit(5);} // write error
 
+    // writes the linked list elements separately -> reason: pointers become invalid after each run 
     Slot* item = game_ptr->player.inventory;
     while (item != NULL) {
-        if (fwrite(&item->contents, sizeof(Item), 1, f) != 1) {perror("save_game write error"); fclose(f); exit(5);}
+        if (fwrite(&item->contents, sizeof(Item), 1, f) != 1) {perror("save_game write error"); fclose(f); exit(5);} // write error
         item = item->next;
     }
     fclose(f);
 }
 
+// load the game state info into a given game_ptr
 bool load_game(Game* game_ptr, const char* filename) {
     FILE* f = fopen(filename, "rb");
-    if (!f) {perror("load_game open error"); exit(3);}
+    if (!f) {perror("load_game open error"); exit(3);} // open error
 
-    
-    if (fread(game_ptr, sizeof(Game), 1, f) != 1) {perror("load_game read error"); fclose(f); exit(4);}
+    // reads the whole game struct
+    if (fread(game_ptr, sizeof(Game), 1, f) != 1) {perror("load_game read error"); fclose(f); exit(4);} // read error
 
+    // reconstructs the linked list
     game_ptr->player.inventory = NULL;
     for (int i = 0; i < game_ptr->player.item_count; i++) {
         Item item;
         
-        if (fread(&item, sizeof(Item), 1, f) != 1) {perror("load_game read error"); fclose(f); exit(4);}
+        if (fread(&item, sizeof(Item), 1, f) != 1) {perror("load_game read error"); fclose(f); exit(4);} // read error
 
         Slot* new_slot = (Slot*)malloc(sizeof(Slot));
         new_slot->contents = item;
@@ -109,6 +114,7 @@ bool load_game(Game* game_ptr, const char* filename) {
     return true;
 }
 
+// checks if the save file is presesnt
 bool save_exists(const char* file_name) {
     FILE* f = fopen(file_name, "rb");
     if (f) {fclose(f); return true;}
